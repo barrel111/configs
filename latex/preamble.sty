@@ -1,0 +1,164 @@
+% Declare that this style file requires at least LaTeX version 2e.
+\NeedsTeXFormat{LaTeX2e}
+
+% Provide the name of your page, the date it was last updated, and a comment about what it's used for
+\ProvidesPackage{preamble}[my preamble!]
+
+% Preamble
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multicol}
+\usepackage{xparse}
+
+% for headers/footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\getenv}{om}
+ {
+  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
+  \tl_trim_spaces:N \l_tmpa_tl
+  \IfNoValueTF { #1 }
+   {
+    \tl_use:N \l_tmpa_tl
+   }
+   {
+    \tl_set_eq:NN #1 \l_tmpa_tl
+   }
+ }
+
+\ExplSyntaxOff
+\getenv[\AUTHOR]{AUTHOR}
+
+% \usepackage{titlesec}
+
+\graphicspath{ {./images/} }
+
+% \usepackage{hyperref}
+% \hypersetup{
+%     colorlinks=true,
+%     linkcolor=cyan,
+%     filecolor=red,
+%     urlcolor=blue,
+%     }
+
+
+\DeclareMathOperator\cis{cis}
+\DeclareMathOperator\re{Re}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% algorithms
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+
+\renewcommand{\Call}[1]{{\textbf{Call }#1}}
+\algrenewcommand\algorithmicrequire{\textbf{Assuming:}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% theorem styles
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}{Conjecture}[section]
+\newtheorem{question}{Question}[section]
+\newtheorem*{question*}{Question}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem*{claim}{Claim}
+\newtheorem*{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{notation*}{Notation}
+
+\renewcommand*{\proofname}{Proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% mathbb
+
+\newcommand{\E}{\mathbb{E}} %natural numbers
+\newcommand{\N}{\mathbb{N}} %natural numbers
+\newcommand{\Z}{\mathbb{Z}} %integers
+\newcommand{\R}{\mathbb{R}} %real numbers
+\newcommand{\Q}{\mathbb{Q}}%rational numbers
+\newcommand{\C}{\mathbb{C}} %complex numbers
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% mathrm
+
+\renewcommand{\dim}{\mathrm{dim}} %dimension
+\renewcommand{\ker}{\mathrm{Ker}} %kernel
+\newcommand{\im}{\mathrm{Im}} %image
+\newcommand{\tr}{\mathrm{tr}} %trace
+\newcommand{\id}{\mathrm{id}} %identity map (lowercase)
+\newcommand{\Id}{\mathrm{Id}} %identity map/matrix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2230
+
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}} %limit, but with the "n \to \infty" part below
+
+\newcommand{\inv}{^{-1}} %writes ^{-1}
+
+\newcommand{\vv}[1]{\vec{\boldsymbol{#1}}} % for vectors
+
+% \newcommand{\norm}[1]{\lVert#1\rVert}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% for assignments
+
+\newcounter{problem}[section]
+\newenvironment{problem}[1][]{\refstepcounter{problem}\par\medskip
+   \noindent \textbf{Problem~\theproblem. #1} \rmfamily}{\medskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% title and related matters
+
+\author{\AUTHOR}
+\date{\today}
+
+
+% Finally, we'll use \endinput to indicate that LaTeX can stop reading this file. LaTeX will ignore anything after this line.
+\endinput
