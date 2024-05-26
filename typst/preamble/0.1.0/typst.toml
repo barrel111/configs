@@ -1,0 +1,7 @@
+[package]
+name = "preamble"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["koking"]
+license = "MIT-0"
+description = "The best template."
