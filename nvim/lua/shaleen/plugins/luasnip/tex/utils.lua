@@ -2,6 +2,7 @@
 local ls = require("luasnip")
 local sn = ls.snippet_node
 local i = ls.insert_node
+local mathzone_ts = require("shaleen.plugins.luasnip.tex.utils-mathzone-ts")
 
 local utils = {}
 
@@ -19,7 +20,8 @@ end
 
 -- Detect whether we are in a mathzone
 utils.in_mathzone = function()
-	return vim.fn["vimtex#syntax#in_mathzone"]() == 1
+	-- return vim.fn["vimtex#syntax#in_mathzone"]() == 1
+	return mathzone_ts.in_mathzone() or utils.in_env("align*") or utils.in_env("equation*")
 end
 
 utils.in_text = function()

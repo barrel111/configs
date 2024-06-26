@@ -21,14 +21,20 @@ return {
 	),
 
 	s(
-		{ trig = "tii", snippetType = "autosnippet", dscr = "Expands 'tit' into '\textit{}'" },
+		{ trig = "tii", snippetType = "autosnippet", dscr = "Expands 'tit' into '\\textit{}'" },
 		fmta("\\textit{<>}", {
 			d(1, utils.get_visual),
 		})
 	),
 
 	s(
-		{ trig = "([^%.])txt", snippetType = "autosnippet", dscr = "Expands 'txt' into '\text{}'" },
+		{
+			trig = "([^.])txt",
+			snippetType = "autosnippet",
+			dscr = "Expands 'txt' into '\\text{}'",
+			regTrig = true,
+			wordTrig = false,
+		},
 		fmta("\\text{<>}", {
 			d(1, utils.get_visual),
 		})

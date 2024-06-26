@@ -9,7 +9,7 @@ local in_mathzone = require("shaleen.plugins.luasnip.tex.utils").in_mathzone
 return {
 	s(
 		{ trig = "(", snippetType = "autosnippet", dscr = "Expands '(' into '\\left(\\right)'" },
-		fmta("\\left( <> \\right)", {
+		fmta("\\left( <> \\right", {
 			i(1),
 		}),
 		{ condition = in_mathzone }
@@ -17,7 +17,7 @@ return {
 
 	s(
 		{ trig = "[", snippetType = "autosnippet", dscr = "Expands '[' into '\\left[\\right]'" },
-		fmta("\\left[ <> \\right]", {
+		fmta("\\left[ <> \\right", {
 			i(1),
 		}),
 		{ condition = in_mathzone } -- `condition` option passed in the snippet `opts` table
@@ -25,7 +25,7 @@ return {
 
 	s(
 		{ trig = "\\{", snippetType = "autosnippet", dscr = "Expands '\\{' into '\\left{\\right}'" },
-		fmta("\\left{ <> \\right}", {
+		fmta("\\left\\{ <> \\right\\", {
 			i(1),
 		}),
 		{ condition = in_mathzone } -- `condition` option passed in the snippet `opts` table

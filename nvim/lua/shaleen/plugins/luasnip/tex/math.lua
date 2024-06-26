@@ -23,7 +23,7 @@ return {
 		{ trig = "__", snippetType = "autosnippet", dscr = "Expands '__' into '_{}'" },
 		fmta("_{<>}", {
 			i(1),
-		}),
-		{ condition = utils.in_mathzone } -- `condition` option passed in the snippet `opts` table
+		})
+		-- { condition = utils.in_mathzone } -- `condition` option passed in the snippet `opts` table
 	),
 }

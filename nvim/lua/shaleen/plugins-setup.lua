@@ -28,7 +28,7 @@ return require("packer").startup(function(use)
 	use("ellisonleao/gruvbox.nvim")
 
 	-- window management
-	use("christoomey/vim-tmux-navigator")
+	-- use("christoomey/vim-tmux-navigator")
 	use("szw/vim-maximizer")
 
 	-- convenience
@@ -84,11 +84,8 @@ return require("packer").startup(function(use)
 	-- vscode like icons for lsp
 	use("onsails/lspkind.nvim")
 
-	-- typescript
-	use("jose-elias-alvarez/typescript.nvim")
-
 	-- linters and formatters
-	use("jose-elias-alvarez/null-ls.nvim")
+	-- use("jose-elias-alvarez/null-ls.nvim")
 	use("jay-babu/mason-null-ls.nvim")
 
 	-- treesitter

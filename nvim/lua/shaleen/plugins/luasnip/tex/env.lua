@@ -12,8 +12,8 @@ local utils = require("shaleen.plugins.luasnip.tex.utils")
 
 return {
 	s(
-		{ trig = "([^%a])mm", snippetType = "autosnippet", wordTrig = false, regTrig = true },
-		fmta("<>$<>$", {
+		{ trig = "mm", snippetType = "autosnippet", wordTrig = true, regTrig = false },
+		fmta("<>$ <> $", {
 			f(function(_, snip)
 				return snip.captures[1]
 			end),
