@@ -6,10 +6,10 @@
   sem: "~Sem~",
   title: "TITLE",
   subtitle: "subtitle",
-  authors: (),
+  authors: ("Shaleen Baral",),
   body,
   contents: true,
-  bib: false
+  end: none
 ) = {
   set document(author: authors, title: title)
   set page(
@@ -63,11 +63,12 @@
 
   body
 
-  // bibliography (optional).
-  if bib {
+  // end content (optional).
+  // usually for something like a bibliography
+  if type(end) == content {
     show heading: it => it.body
     pagebreak()
-    bibliography("works.bib")
+    end
   }
 }
 
@@ -93,9 +94,13 @@
 // * math conveniences.
 #let to = $arrow.long$
 #let iff = $arrow.long.double.l.r$
-#let id = "id"
 #let implies = $arrow.double.long$
+
 #let inner(x, y) = $lr(angle.l #x, #y angle.r)$
+
+#let id = "id"
+#let OPT = `OPT`
+#let ALG = `ALG`
 
 // * aesthetics.
 #set enum(indent: 15pt, numbering: "a.")
