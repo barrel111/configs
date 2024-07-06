@@ -102,5 +102,8 @@
 #let OPT = `OPT`
 #let ALG = `ALG`
 
+#let Hom = (c, a, b) => $"Hom"_(#c)(#a, #b)$
+#let Obj = $"Obj"$
+
 // * aesthetics.
 #set enum(indent: 15pt, numbering: "a.")
