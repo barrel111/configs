@@ -11,7 +11,6 @@ keymap.set("n", "j", "gj")
 keymap.set("n", "k", "gk")
 
 keymap.set("n", "<leader>bb", "<C-^><CR>")
-
 keymap.set("n", "<leader>+", "<C-a>")
 keymap.set("n", "<leader>-", "<C-x>")
 

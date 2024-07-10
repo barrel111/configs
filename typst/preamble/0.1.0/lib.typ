@@ -102,7 +102,7 @@
 #let OPT = `OPT`
 #let ALG = `ALG`
 
-#let Hom = (c, a, b) => $"Hom"_(#c)(#a, #b)$
+#let Hom = (c, a, b) => $"Hom"_(sans(#c))(#a, #b)$
 #let Obj = $"Obj"$
 
 // * aesthetics.
