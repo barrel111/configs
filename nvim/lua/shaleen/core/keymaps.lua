@@ -45,10 +45,10 @@ keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>")
 
 -- refresh snippets
 keymap.set(
-	"n",
-	"<leader>L",
-	'<cmd>lua require("luasnip.loaders.from_lua").load'
-		.. '({paths = "~/.config/nvim/lua/shallen/plugins/luasnip/"})<CR>'
+  "n",
+  "<leader>L",
+  '<cmd>lua require("luasnip.loaders.from_lua").load'
+  .. '({paths = "~/.config/nvim/lua/shallen/plugins/luasnip/"})<CR>'
 )
 
 -- vimtex

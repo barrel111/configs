@@ -1,6 +1,6 @@
 # Dock.app injection
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-sudo yabai --load-sa#
+sudo yabai --load-sa
 
 # binary space partition
 yabai -m config layout bsp

@@ -1,5 +1,8 @@
 #import "@preview/ctheorems:1.1.2": *
 
+#let thmfill = (prop: rgb("#e8e8f8"), lemma: rgb("#efe6ff"), corollary: rgb("#f8e8e8"))
+// #let thmfill = (prop: none, lemma: none, corollary: none)
+
 // * project setup.
 #let project(
   course: "~COURSE~",
@@ -7,9 +10,10 @@
   title: "TITLE",
   subtitle: "subtitle",
   authors: ("Shaleen Baral",),
+  authors_label: "Authors:",
   body,
   contents: true,
-  end: none
+  end: none,
 ) = {
   set document(author: authors, title: title)
   set page(
@@ -17,11 +21,12 @@
     number-align: center,
     margin: (top: 1in, bottom: 1in, x: 1in),
   )
-  set text(font: "KpRoman", size: 10pt)
+  set text(size: 10pt)
 
   show link: underline;
 
   set enum(indent: 15pt, numbering: "a.")
+  set list(indent: 15pt)
 
   show math.equation: set text(font: "New Computer Modern Math")
 
@@ -34,7 +39,7 @@
     #align(center)[
       #block(text(weight: 400, 1.15em, subtitle))
     ]
-    Authors: #authors.join(", ")
+    #authors_label #authors.join(", ")
   ]
 
   // table of contents.
@@ -51,7 +56,7 @@
   // heading.
   set heading(numbering: "1.")
   show heading: it => [
-    \ #(counter(heading).display() + " " * 3 + it.body) \
+    #(counter(heading).display() + " " * 3 + it.body)
   ]
 
   // qed should be square with black outline and
@@ -75,20 +80,20 @@
 // * quality of life
 #let numbered_eq(content) = math.equation(block: true, numbering: "(1)", content)
 
-// * theorem environments.
-#let prop = thmbox("proposition", "Proposition", fill: rgb("#e8e8f8"))
-#let lemma = thmbox("lemma", "Lemma", fill: rgb("#efe6ff"))
-#let corollary = thmbox("corollary", "Corollary", base: "proposition", fill: rgb("#f8e8e8"))
-#let definition = thmbox("definition", "Definition", inset: (x: 1.2em, top: 1em))
-
 // examples and remarks are not numbered.
-#let example = thmplain("example", "Example").with(numbering: none)
+#let example = thmplain("example", "Example", inset: 0em).with(numbering: none)
 #let remark = thmplain("remark", "Remark", inset: 0em).with(numbering: none)
+
+// * theorem environments.
+#let prop = thmbox("proposition", "Proposition", fill: thmfill.prop, radius: 0em, inset: (x: 0.75em, y: 0.75em), stroke: (bottom: 0.25pt, top: 0.65pt))
+#let lemma = thmbox("lemma", "Lemma", fill: thmfill.lemma, radius: 0em, inset: (x: 0.65em, y: 0.65em), stroke: (bottom: 0.25pt, top: 0.65pt))
+#let corollary = thmbox("corollary", "Corollary", base: "proposition", fill: thmfill.corollary, radius: 0em, inset: (x: 0.65em, y: 0.65em), stroke: (bottom: 0.25pt, top: 0.65pt))
+#let definition = thmbox("definition", "Definition", inset: (x: 1em))
 
 // proofs are attached to theorems, although they are not numbered.
 // qed should always be in a new line
 #let proof = thmproof("proof", "Proof", base: "theorem", bodyfmt: body => [
-  #body \ #h(1fr) $square$
+  #body #h(1fr) $square$
 ])
 
 // * math conveniences.
@@ -107,3 +112,12 @@
 
 // * aesthetics.
 #set enum(indent: 15pt, numbering: "a.")
+
+// * problem set.
+#let p = counter("problem")
+#let problem(it) = block[
+  #p.step()
+  #text(size: 12pt)[*Problem #context p.display().* (#it)] 
+]
+
+#let mm(it) = block[\ #box(width: 100%)[#it]]
