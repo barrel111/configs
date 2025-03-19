@@ -47,9 +47,10 @@ vim.g.tex_flavor = "latex"
 -- vim.g.vimtex_view_method = "skim"
 vim.g.vimtex_view_method = "sioyek"
 
--- suppress dumb warnings
+-- suppress dumb quickfix & warnings
 vim.g.vimtex_quickfix_ignore_filters = {
   "Underfull",
   "Overfull",
-  "Empty bibliography"
+  "Empty bibliography",
+  "Missing"
 }
