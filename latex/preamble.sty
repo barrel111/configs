@@ -8,12 +8,14 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
+\usepackage{bbm}
 \usepackage[shortlabels]{enumitem}
 \usepackage[margin=1in]{geometry}
 \usepackage{mathrsfs}
 \usepackage{graphicx}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{marvosym}
 \usepackage{multicol}
 \usepackage{xparse}
 
@@ -85,7 +87,7 @@
 
 
 \renewcommand{\Call}[1]{{\textbf{Call }#1}}
-\algrenewcommand\algorithmicrequire{\textbf{Assuming:}}
+\algrenewcommand\algorithmicrequire{\textbf{assuming:}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % theorem styles
@@ -117,13 +119,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % mathbb
 
-\newcommand{\E}{\mathbb{E}} %natural numbers
-\newcommand{\1}{\mathbb{1}} %indicator function
-\newcommand{\N}{\mathbb{N}} %natural numbers
-\newcommand{\Z}{\mathbb{Z}} %integers
-\newcommand{\R}{\mathbb{R}} %real numbers
-\newcommand{\Q}{\mathbb{Q}} %rational numbers
-\newcommand{\C}{\mathbb{C}} %complex numbers
+\newcommand{\E}{\mathbb{E}}  %natural numbers
+\newcommand{\1}{\mathbbm{1}} %indicator function
+\newcommand{\N}{\mathbb{N}}  %natural numbers
+\newcommand{\Z}{\mathbb{Z}}  %integers
+\newcommand{\R}{\mathbb{R}}  %real numbers
+\newcommand{\Q}{\mathbb{Q}}  %rational numbers
+\newcommand{\C}{\mathbb{C}}  %complex numbers
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

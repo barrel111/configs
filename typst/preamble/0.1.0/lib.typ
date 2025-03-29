@@ -102,6 +102,8 @@
 #let implies = $arrow.double.long$
 
 #let inner(x, y) = $lr(angle.l #x, #y angle.r)$
+#let conv(it) = $"conv"({#it})$
+#let cone(it) = $"cone"({#it})$
 
 #let id = "id"
 #let OPT = `OPT`
@@ -121,3 +123,4 @@
 ]
 
 #let mm(it) = block[\ #box(width: 100%)[#it]]
+
