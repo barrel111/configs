@@ -1,7 +1,7 @@
 # configs
 all the configs i'll ever need. 
 
-it's easiest to set up via symlinks. just run the following set of commands.
+it's easiest to set up via symlinks. i have just provided relative paths here, but symlinks tend to prefer absolute ones. just run the following set of commands.
 
 currently the following is my setup.
 ```shell
