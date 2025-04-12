@@ -60,11 +60,11 @@
             "shared font" : "",
             "base: compression resistance" : 1,
             "shared text color" : {
-              "Red Component" : 0.46536320447921753,
+              "Red Component" : 0.78037256002426147,
               "Color Space" : "P3",
-              "Blue Component" : 0.25397393107414246,
+              "Blue Component" : 0.15581965446472168,
               "Alpha Component" : 1,
-              "Green Component" : 0.26031935214996338
+              "Green Component" : 0.25584682822227478
             },
             "localize" : 1
           },
@@ -80,18 +80,18 @@
         "class" : "iTermStatusBarGitComponent",
         "configuration" : {
           "knobs" : {
-            "base: compression resistance" : 1,
+            "maxwidth" : 1.7976931348623157e+308,
             "iTermStatusBarGitComponentPollingIntervalKey" : 2,
             "base: priority" : 5,
             "shared text color" : {
-              "Red Component" : 0.48118233680725098,
+              "Red Component" : 0.32752302289009094,
               "Color Space" : "P3",
-              "Blue Component" : 0.28303474187850952,
+              "Blue Component" : 0.29304701089859009,
               "Alpha Component" : 1,
-              "Green Component" : 0.49926048517227173
+              "Green Component" : 0.58972936868667603
             },
             "minwidth" : 0,
-            "maxwidth" : 1.7976931348623157e+308
+            "base: compression resistance" : 1
           },
           "layout advanced configuration dictionary value" : {
             "remove empty components" : false,
@@ -105,17 +105,7 @@
         "class" : "iTermStatusBarSpringComponent",
         "configuration" : {
           "knobs" : {
-            "base: priority" : 5,
-            "base: compression resistance" : 1,
-            "shared text color" : {
-              "Red Component" : 0.3130115270614624,
-              "Color Space" : "P3",
-              "Blue Component" : 0.31570723652839661,
-              "Alpha Component" : 1,
-              "Green Component" : 0.49410289525985718
-            },
-            "iTermStatusBarSpringComponentSpringConstantKey" : 0.01,
-            "iTermStatusBarSpringComponentSizeMultipleKey" : 1
+            "iTermStatusBarSpringComponentSpringConstantKey" : 0.01
           },
           "layout advanced configuration dictionary value" : {
             "remove empty components" : false,
@@ -131,13 +121,12 @@
           "knobs" : {
             "base: priority" : 5,
             "shared text color" : {
-              "Red Component" : 0.29229223728179932,
+              "Red Component" : 0.37821727991104126,
               "Color Space" : "P3",
-              "Blue Component" : 0.49234980344772339,
+              "Blue Component" : 0.51360523700714111,
               "Alpha Component" : 1,
-              "Green Component" : 0.42644059658050537
-            },
-            "base: compression resistance" : 1
+              "Green Component" : 0.6777462363243103
+            }
           },
           "layout advanced configuration dictionary value" : {
             "remove empty components" : false,
@@ -153,11 +142,11 @@
           "knobs" : {
             "base: priority" : 5,
             "shared text color" : {
-              "Red Component" : 0.32788339257240295,
+              "Red Component" : 0.64478451013565063,
               "Color Space" : "P3",
-              "Blue Component" : 0.4847685694694519,
+              "Blue Component" : 0.72134870290756226,
               "Alpha Component" : 1,
-              "Green Component" : 0.25368779897689819
+              "Green Component" : 0.28036960959434509
             }
           },
           "layout advanced configuration dictionary value" : {
@@ -175,11 +164,11 @@
             "ShowPercentage" : 1,
             "base: priority" : 5,
             "shared text color" : {
-              "Red Component" : 0.4673653244972229,
+              "Red Component" : 0.78496682643890381,
               "Color Space" : "P3",
-              "Blue Component" : 0.379524827003479,
+              "Blue Component" : 0.3917197585105896,
               "Alpha Component" : 1,
-              "Green Component" : 0.26313775777816772
+              "Green Component" : 0.29787907004356384
             },
             "ShowTime" : 1
           },

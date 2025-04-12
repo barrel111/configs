@@ -12,14 +12,14 @@ mason.setup()
 
 mason_lspconfig.setup({
   ensure_installed = {
-    "cssls",
-    "elmls",
-    "gopls",
-    "hls",
-    "html",
-    "julials",
-    "lua_ls",
-    "rust_analyzer",
+    -- "cssls",
+    -- "elmls",
+    -- "gopls",
+    -- "hls",
+    -- "html",
+    -- "julials",
+    -- "lua_ls",
+    -- "rust_analyzer",
     "texlab",
   },
 })
