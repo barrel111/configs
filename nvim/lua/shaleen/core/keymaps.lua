@@ -2,6 +2,10 @@ local keymap = vim.keymap
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
+-- make sure that space+<key> doesn't
+-- move cursor
+keymap.set("n", " ", "<Nop>")
+
 -- general keymaps
 -- keymap.set("i", "jk", "<ESC>")
 keymap.set("n", "<leader>hh", ":nohl<CR>")

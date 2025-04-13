@@ -45,7 +45,10 @@ opt.iskeyword:append("-")
 -- latex setup
 vim.g.tex_flavor = "latex"
 -- vim.g.vimtex_view_method = "skim"
-vim.g.vimtex_view_method = "sioyek"
+-- vim.g.vimtex_view_method = "sioyek"
+vim.g.vimtex_view_method = "general"
+-- vim.g.vimtex_view_general_viewer = "/Users/shaleenbaral/Documents/configs/sioyek-synctex.sh"
+vim.g.vimtex_view_general_viewer = "/Users/shaleenbaral/Documents/configs/scripts/sioyek-synctex.sh"
 
 -- suppress dumb quickfix & warnings
 vim.g.vimtex_quickfix_ignore_filters = {
