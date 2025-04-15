@@ -42,14 +42,15 @@ end
 -- all lsps other than lua
 -- have simple configs
 local lsp_list = {
-  "cssls",
-  "elmls",
-  "gopls",
-  "hls",
-  "html",
-  "julials",
-  "rust_analyzer",
+  -- "cssls",
+  -- "elmls",
+  -- "gopls",
+  -- "hls",
+  -- "html",
+  -- "julials",
+  -- "rust_analyzer",
   "texlab",
+  "ocamllsp",
 }
 
 for _, l in pairs(lsp_list) do

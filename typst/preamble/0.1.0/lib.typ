@@ -1,4 +1,4 @@
-#import "@preview/ctheorems:1.1.2": *
+#import "@preview/ctheorems:1.1.3": *
 
 #let thmfill = (prop: rgb("#e8e8f8"), lemma: rgb("#efe6ff"), corollary: rgb("#f8e8e8"))
 // #let thmfill = (prop: none, lemma: none, corollary: none)
@@ -22,6 +22,7 @@
     margin: (top: 1in, bottom: 1in, x: 1in),
   )
   set text(size: 10pt)
+  // set text(font: "EB Garamond")
 
   show link: underline;
 

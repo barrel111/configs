@@ -10,6 +10,7 @@ conform.setup({
     -- haskell = { "ormolu" },
     -- lua = { "stylua" },
     -- rust = { "rustfmt" },
+    ocaml = { "ocamlformat" },
   },
   format_on_save = {
     timeout_ms = 500,
