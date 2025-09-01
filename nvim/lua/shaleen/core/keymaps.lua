@@ -46,6 +46,8 @@ keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>")
 keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
 -- list available help tags
 keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>")
+-- list available zotero citations
+keymap.set("n", "<leader>fz", "<cmd>Telescope zotero<cr>")
 
 -- refresh snippets
 keymap.set(

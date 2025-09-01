@@ -48,7 +48,10 @@ return require("packer").startup(function(use)
   -- dependency for better sorting performanc
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
   -- fuzzy finder
-  use({ "nvim-telescope/telescope.nvim", branch = "0.1.x" })
+  use({
+    "nvim-telescope/telescope.nvim",
+    branch = "0.1.x",
+  })
 
   -- autocompletion
   use("hrsh7th/nvim-cmp")
@@ -61,8 +64,8 @@ return require("packer").startup(function(use)
   use("rafamadriz/friendly-snippets")
 
   -- lsp installation and management
-  use("williamboman/mason.nvim")
-  use("williamboman/mason-lspconfig.nvim")
+  use("mason-org/mason.nvim")
+  use("mason-org/mason-lspconfig.nvim")
 
   -- lsp config
   use("neovim/nvim-lspconfig")
@@ -114,6 +117,28 @@ return require("packer").startup(function(use)
   }
 
   use { 'kaarmu/typst.vim', ft = { 'typst' } }
+
+  -- quarto
+  use {
+    "jmbuhr/otter.nvim",
+    commit = "f3a4018",
+  }
+  use {
+    "quarto-dev/quarto-nvim",
+  }
+
+  -- zotero
+  use(
+    {
+      'jmbuhr/telescope-zotero.nvim',
+      requires = {
+        { 'kkharji/sqlite.lua' },
+      },
+      opts = {},
+    }
+  )
+
+  use({ "jmbuhr/cmp-pandoc-references" })
 
   -- haskell-tools
   -- use("mrcjkb/haskell-tools.nvim")

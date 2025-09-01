@@ -1,6 +1,6 @@
 local luasnip_status, luasnip = pcall(require, "luasnip")
 if not luasnip_status then
-	return
+  return
 end
 
 -- lazy load local snippets
@@ -9,14 +9,16 @@ require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/shal
 -- lazy load friendly-snippets
 require("luasnip/loaders/from_vscode").lazy_load()
 
+-- luasnip.filetype_extend("qmd", { "tex" })
+
 luasnip.config.set_config({ -- Setting LuaSnip config
 
-	-- Enable autotriggered snippets
-	enable_autosnippets = true,
+  -- Enable autotriggered snippets
+  enable_autosnippets = true,
 
-	-- Use Tab to trigger visual selection
-	store_selection_keys = "<Tab>",
+  -- Use Tab to trigger visual selection
+  store_selection_keys = "<Tab>",
 
-	-- Update repeated nodes as it is being typed
-	update_events = "TextChanged,TextChangedI",
+  -- Update repeated nodes as it is being typed
+  update_events = "TextChanged,TextChangedI",
 })
