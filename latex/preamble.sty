@@ -1,20 +1,19 @@
-% Declare that this style file requires at least LaTeX version 2e.
+% Declare that this style file requires at least LaTeX versien 2e.
 \NeedsTeXFormat{LaTeX2e}
 
 \ProvidesPackage{preamble}[2025/05/24 v1.0 Custom mathematical preamble]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Core packages
-\RequirePackage[utf8]{inputenc}
+% \RequirePackage[utf8]{inputenc}
 \RequirePackage[margin=1in]{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{xparse}
 
 % Mathematics packages
-\RequirePackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
 \RequirePackage{bbm}
-\RequirePackage{mathrsfs}
-
+% \RequirePackage{mathrsfs}
 
 % List and enumeration packages
 \RequirePackage[shortlabels]{enumitem}
@@ -29,26 +28,60 @@
 \RequirePackage{marvosym}
 
 % Fonts + Syntax Highlighting
-\RequirePackage{kpfonts}
-\RequirePackage[scale=0.85]{sourcecodepro}
+\RequirePackage{newpxtext}
+\RequirePackage{newpxmath}
+\RequirePackage[scale=0.9]{sourcecodepro}
 \RequirePackage{minted}
-\setminted{style=gruvbox-light}
+\AtBeginDocument{
+  \setminted{style=gruvbox-light, fontsize=\small}
+}
 
-% Uncomment if needed:
-% \RequirePackage{hyperref}
-% \hypersetup{
-%     colorlinks=true,
-%     linkcolor=cyan,
-%     filecolor=red,
-%     urlcolor=blue,
-% }
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    filecolor=red,
+    urlcolor=blue,
+}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Page setup
-\pagestyle{fancy}
-\fancyhf{}
+\providecommand{\symbf}{\boldsymbol}
 
-\graphicspath{{./images/}}
+
+\NewDocumentCommand{\subtitle}{m}{\gdef\@subtitle{#1}}
+\providecommand{\@subtitle}{} % default empty
+
+\RenewDocumentCommand{\maketitle}{}{
+  \PackageInfo{preamble}{Using custom \maketitle layout (cover aware).}
+  \ifcoverpage
+    % Cover-style title: vertically centered
+    \thispagestyle{cover}
+    \begin{titlepage}
+      \vspace*{\fill} % push to vertical center
+      \begin{center}
+        {\LARGE\bfseries \@title \par}
+        \IfNoValueF{\@subtitle}{\vskip0.8em {\large\itshape \@subtitle \par}}
+        \vskip1.2em
+        {\large \@author \par}
+        \vskip0.8em
+        {\normalsize \@date \par}
+      \end{center}
+      \vspace*{\fill} % balance bottom margin
+      \clearpage
+    \end{titlepage}
+  \else
+    % Standard title layout
+    \begin{center}
+      {\LARGE\bfseries \@title \par}
+      \IfNoValueF{\@subtitle}{\vskip0.5em {\large\itshape \@subtitle \par}}
+      \vskip1em
+      {\large \@author \par}
+      \vskip0.5em
+      {\normalsize \@date \par}
+    \end{center}
+    \vskip2em
+  \fi
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Environment variable handling
@@ -69,38 +102,226 @@
 
 \getenv[\AUTHOR]{AUTHOR}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Mathematical operators
-\DeclareMathOperator{\cis}{cis}
-\DeclareMathOperator{\re}{Re}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
+% Page styles and cover page handling
+\RequirePackage{fancyhdr}
+
+\fancypagestyle{fancydefault}{
+  \fancyhf{}
+  \fancyhead[L]{\nouppercase{\leftmark}}
+  \fancyhead[R]{\thepage}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{cover}{
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Default page style
+\pagestyle{fancydefault}
+
+% Define coverpage toggle
+\newif\ifcoverpage
+\coverpagefalse
+
+% Automatically adjust first page style when document starts
+\AtBeginDocument{
+  \ifcoverpage
+    \thispagestyle{cover}
+  \else
+    \thispagestyle{fancydefault}
+  \fi
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematical operators and notation
+
+% ----------------------------------------------------------------
+% Safe fallback for LaTeX3-style bold math
+\providecommand{\symbf}{\mathbf}
+
+% ----------------------------------------------------------------
+% Basic delimiters
+\DeclarePairedDelimiter{\parens}{(}{)}
+\DeclarePairedDelimiter{\bracks}{[}{]}
+\DeclarePairedDelimiter{\braces}{\lbrace}{\rbrace}
+\DeclarePairedDelimiterX{\set}[2]{\lbrace}{\rbrace}{#1 \;\delimsize\vert\; #2}
+\DeclarePairedDelimiter{\ang}{\langle}{\rangle}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+% ----------------------------------------------------------------
+% Core linear algebra operators
+\DeclareMathOperator{\Dim}{dim}
+\DeclareMathOperator{\Ker}{ker}
+\DeclareMathOperator{\Rk}{rk}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Det}{det}
+
+% ----------------------------------------------------------------
+% Functional analysis notation
+\NewDocumentCommand{\inner}{s m m o}{%
+  \IfBooleanTF{#1}
+    {\left\langle #2, #3 \right\rangle
+     \IfValueT{#4}{_{#4}}}
+    {\langle #2, #3 \rangle
+     \IfValueT{#4}{_{#4}}}
+}
+
+% Starred versions auto-scale, unstarred stay fixed:
+%   \norm{x}   → ‖x‖ (fixed)
+%   \norm*{x}  → auto-sized
+% You can also do things like \norm[\infty]{f}
+
+% Add optional argument for subscript: norm_p etc.
+\NewDocumentCommand{\normp}{smm}{
+  \IfBooleanTF{#1}
+    {\norm*{#2}_{#3}}
+    {\norm{#2}_{#3}}
+}
+
+% L^p space and L^p norm
+\NewDocumentCommand{\Lp}{m o}{
+  \IfNoValueTF{#2}
+    {L^{#1}}
+    {L^{#1}\!\left(#2\right)}
+}
+
+% ----------------------------------------------------------------
+% Real and imaginary parts (upright, modern style)
+\let\Re\relax
+\let\Im\relax
+\DeclareMathOperator{\Re}{Re}
+\DeclareMathOperator{\Im}{Im}
+
+% ----------------------------------------------------------------
+% Probability and statistics operators
+\let\Pr\relax
+\DeclareMathOperator{\Pr}{\mathbb{P}}   % overwrite default Pr
+\DeclareMathOperator{\E}{\mathbb{E}}    % expectation
+\DeclareMathOperator{\Var}{\symbf{Var}} % variance
+\DeclareMathOperator{\Cov}{\symbf{Cov}} % covariance
+
+% ----------------------------------------------------------------
+% Blackboard bold symbols
+\NewDocumentCommand{\1}{}{\mathbbm{1}} 
+\NewDocumentCommand{\N}{}{\mathbb{N}} % naturals
+\NewDocumentCommand{\Z}{}{\mathbb{Z}} % integers
+\NewDocumentCommand{\Q}{}{\mathbb{Q}} % rationals
+\NewDocumentCommand{\R}{}{\mathbb{R}} % reals
+\NewDocumentCommand{\C}{}{\mathbb{C}} % complex
+
+% ----------------------------------------------------------------
+% Miscellaneous notation
+\providecommand{\Empty}{\varnothing} % preferred empty set symbol
+\RenewDocumentCommand{\vv}{m}{\symbf{#1}} % bold vectors
+\NewDocumentCommand{\inv}{}{{}^{-1}}      % inverse
+\NewDocumentCommand{\Lim}{m}{\lim\limits_{#1}} % clean limit notation
+\newcommand{\eps}{\varepsilon}
+\newcommand{\del}{\delta}
+\newcommand{\lam}{\lambda}
+
+% ----------------------------------------------------------------
+% Complexity Classes
+\NewDocumentCommand{\class}{m}{\mathsf{#1}}
+
+% ----------------------------------------------------------------
+% Big-O family
+\NewDocumentCommand{\Otilde}{m}{\tilde{\mathcal{O}}\parens{#1}} % Soft-O
+\NewDocumentCommand{\Ohat}{m}{\widehat{\mathcal{O}}\parens{#1}} % Occasionally used for special O
+\NewDocumentCommand{\Omegahat}{m}{\widehat{\Omega}\parens{#1}}  % symmetric to Ohat
+
+\NewDocumentCommand{\bigO}{m}{\mathcal{O}\parens{#1}}
+\NewDocumentCommand{\bigTheta}{m}{\Theta\parens{#1}}
+\NewDocumentCommand{\bigOmega}{m}{\Omega\parens{#1}}
+\NewDocumentCommand{\littleo}{m}{o\parens{#1}}
+\NewDocumentCommand{\littleomega}{m}{\omega\parens{#1}}
+
+% Polylogarithms and growth rates
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\polylog}{poly(log)}
+\DeclareMathOperator{\quasipoly}{quasipoly}
+
+% Common asymptotic equivalence symbols
+\NewDocumentCommand{\simconst}{}{%
+  \mathrel{\asymp}}                % ~ up to constant factor
+
+% Short aliases for asymptotic order comparison
+\NewDocumentCommand{\lt}{m}{\littleo{#1}}       % o(n)
+\NewDocumentCommand{\st}{m}{\Otilde{#1}}        % Ō(n) "softly bounded"
+\NewDocumentCommand{\gt}{m}{\littleomega{#1}}   % ω(n)
+
+% Growth hierarchy commentary macros
+\NewDocumentCommand{\polytime}{}{\class{P}}
+\NewDocumentCommand{\NPtime}{}{\class{NP}}
+\NewDocumentCommand{\BPPtime}{}{\class{BPP}}
+\NewDocumentCommand{\EXPtime}{}{\class{EXP}}
+
+% Standard soft equalities (common in analysis)
+\NewDocumentCommand{\defeq}{}{\vcentcolon=}
+\NewDocumentCommand{\eqdef}{}{=\vcentcolon}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorem environments
+% --- Plain style: theorems, lemmas, corollaries, claims ---
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem*{theorem*}{Theorem}
-\newtheorem*{lemma*}{Lemma}
+\newtheorem{claim}[theorem]{Claim}
 
+% --- Definition style: definitions, examples, notation ---
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
-\newtheorem{conjecture}{Conjecture}[section]
-\newtheorem{question}{Question}[section]
-\newtheorem*{question*}{Question}
-
-\theoremstyle{remark}
-\newtheorem*{claim}{Claim}
-\newtheorem*{remark}{Remark}
-\newtheorem*{note}{Note}
-\newtheorem*{exercise}{Exercise}
+\newtheorem{notation}[theorem]{Notation}
 \newtheorem*{notation*}{Notation}
 
+% --- Remark style: informal commentary ---
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% --- Starred (unnumbered) versions for convenience ---
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{example*}{Example}
+
+% --- Proof heading customization ---
 \renewcommand*{\proofname}{Proof}
+
+% shorthand labeling convention 
+\newcommand{\thmlabel}[1]{\label{thm:#1}}
+\newcommand{\lemlabel}[1]{\label{lem:#1}}
+\newcommand{\deflabel}[1]{\label{def:#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% stylistic consistency with kp/palatino etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def\th@plain{%
+  \thm@notefont{\scshape}% Small caps theorem name
+  \itshape% Italic theorem body
+}
+\def\th@definition{%
+  \thm@notefont{\scshape}% Small caps definition name
+  \normalfont% Upright body
+}
+\def\th@remark{%
+  \thm@notefont{\scshape}% Small caps remark name
+  \normalfont% Upright body
+}
+\def\popQED{\par\nobreak\hfill\qedsymbol\@endpefalse\par}
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Breakable algorithm environment
@@ -126,44 +347,27 @@
 \makeatother
 
 % Algorithm customizations
-\renewcommand{\Call}[1]{\textbf{Call }#1}
+\definecolor{algcomment}{gray}{0.35}
+\renewcommand{\Call}[1]{\textbf{call }#1}
 \algrenewcommand\algorithmicrequire{\textbf{assuming:}}
+\algrenewcommand\algorithmiccomment[1]{\hfill{\color{algcomment}$\blacktriangleright$~#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Mathematical notation shortcuts
-
-% Blackboard bold symbols
-\newcommand{\E}{\mathop{\mathbb{E}}}  % expectation
-\newcommand{\1}{\mathbbm{1}} % indicator function
-
-\newcommand\N{\ensuremath{\mathbb{N}}} % naturals
-\newcommand\Z{\ensuremath{\mathbb{Z}}} % integers
-\newcommand\Q{\ensuremath{\mathbb{Q}}} % rationals
-\newcommand\R{\ensuremath{\mathbb{R}}} % reals
-\newcommand\C{\ensuremath{\mathbb{C}}} % complex
-
-\renewcommand\O{\ensuremath{\emptyset}} % emptyset
-
-% Roman font operators
-\renewcommand{\dim}{\mathrm{dim}} % dimension
-\renewcommand{\ker}{\mathrm{Ker}} % kernel
-\newcommand{\im}{\mathrm{Im}}     % image
-\newcommand{\tr}{\mathrm{tr}}     % trace
-\newcommand{\id}{\mathrm{id}}     % identity map (lowercase)
-\newcommand{\Id}{\mathrm{Id}}     % identity map/matrix
-
-% Common mathematical shortcuts
-\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}} % limit with subscript
-\newcommand{\inv}{^{-1}}          % inverse notation
-\newcommand{\vv}[1]{\boldsymbol{#1}} % bold vectors
-% \newcommand{\vv}[1]{\vec{\boldsymbol{#1}}} 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problem environment for assignments
+% Problem environment 
 \newcounter{problem}[section]
-\newenvironment{problem}[1][]{\refstepcounter{problem}\par\medskip
-   \noindent {\fontsize{11}{13}\selectfont\textbf{Problem~\theproblem. #1}}\rmfamily}{\medskip}
-   % \noindent \textbf{Problem~\theproblem. #1}\normalsize\rmfamily}{\medskip}
+\renewcommand{\theproblem}{\thesection.\arabic{problem}}
+
+\NewDocumentEnvironment{problem}{o}
+{
+  \refstepcounter{problem}
+  \par\vspace{0.5\baselineskip}
+  \noindent\large\textbf{Problem~\theproblem}%
+  \IfValueT{#1}{\textbf{ (#1)}}%
+  \par\nobreak\vspace{0.25\baselineskip}\noindent\normalsize
+}
+{
+  \par\vspace{0.5\baselineskip}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document metadata

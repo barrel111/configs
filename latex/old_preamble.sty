@@ -1,0 +1,173 @@
+% Declare that this style file requires at least LaTeX version 2e.
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{preamble}[2025/05/24 v1.0 Custom mathematical preamble]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Core packages
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{xparse}
+
+% Mathematics packages
+\RequirePackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
+\RequirePackage{bbm}
+\RequirePackage{mathrsfs}
+
+
+% List and enumeration packages
+\RequirePackage[shortlabels]{enumitem}
+
+% Algorithm packages
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+
+% Layout and formatting
+\RequirePackage{fancyhdr}
+\RequirePackage{multicol}
+\RequirePackage{marvosym}
+
+% Fonts + Syntax Highlighting
+\RequirePackage{kpfonts}
+\RequirePackage[scale=0.85]{sourcecodepro}
+\RequirePackage{minted}
+\setminted{style=gruvbox-light}
+
+% Uncomment if needed:
+% \RequirePackage{hyperref}
+% \hypersetup{
+%     colorlinks=true,
+%     linkcolor=cyan,
+%     filecolor=red,
+%     urlcolor=blue,
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page setup
+\pagestyle{fancy}
+\fancyhf{}
+
+\graphicspath{{./images/}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Environment variable handling
+\ExplSyntaxOn
+\NewDocumentCommand{\getenv}{om}
+{
+  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
+  \tl_trim_spaces:N \l_tmpa_tl
+  \IfNoValueTF { #1 }
+  {
+    \tl_use:N \l_tmpa_tl
+  }
+  {
+    \tl_set_eq:NN #1 \l_tmpa_tl
+  }
+}
+\ExplSyntaxOff
+
+\getenv[\AUTHOR]{AUTHOR}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematical operators
+\DeclareMathOperator{\cis}{cis}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}{Conjecture}[section]
+\newtheorem{question}{Question}[section]
+\newtheorem*{question*}{Question}
+
+\theoremstyle{remark}
+\newtheorem*{claim}{Claim}
+\newtheorem*{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{notation*}{Notation}
+
+\renewcommand*{\proofname}{Proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Breakable algorithm environment
+\makeatletter
+\newenvironment{breakablealgorithm}
+{% \begin{breakablealgorithm}
+  \begin{center}
+    \refstepcounter{algorithm}% New algorithm
+    \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+    \renewcommand{\caption}[2][\relax]{% Make a new \caption
+      {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+      \ifx\relax##1\relax % #1 is \relax
+        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+      \else % #1 is not \relax
+        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+      \fi
+      \kern2pt\hrule\kern2pt
+    }
+}{% \end{breakablealgorithm}
+    \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+  \end{center}
+}
+\makeatother
+
+% Algorithm customizations
+\renewcommand{\Call}[1]{\textbf{Call }#1}
+\algrenewcommand\algorithmicrequire{\textbf{assuming:}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematical notation shortcuts
+
+% Blackboard bold symbols
+\newcommand{\E}{\mathop{\mathbb{E}}}  % expectation
+\newcommand{\1}{\mathbbm{1}} % indicator function
+
+\newcommand\N{\ensuremath{\mathbb{N}}} % naturals
+\newcommand\Z{\ensuremath{\mathbb{Z}}} % integers
+\newcommand\Q{\ensuremath{\mathbb{Q}}} % rationals
+\newcommand\R{\ensuremath{\mathbb{R}}} % reals
+\newcommand\C{\ensuremath{\mathbb{C}}} % complex
+
+\renewcommand\O{\ensuremath{\emptyset}} % emptyset
+
+% Roman font operators
+\renewcommand{\dim}{\mathrm{dim}} % dimension
+\renewcommand{\ker}{\mathrm{Ker}} % kernel
+\newcommand{\im}{\mathrm{Im}}     % image
+\newcommand{\tr}{\mathrm{tr}}     % trace
+\newcommand{\id}{\mathrm{id}}     % identity map (lowercase)
+\newcommand{\Id}{\mathrm{Id}}     % identity map/matrix
+
+% Common mathematical shortcuts
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}} % limit with subscript
+\newcommand{\inv}{^{-1}}          % inverse notation
+\newcommand{\vv}[1]{\boldsymbol{#1}} % bold vectors
+% \newcommand{\vv}[1]{\vec{\boldsymbol{#1}}} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problem environment for assignments
+\newcounter{problem}[section]
+\newenvironment{problem}[1][]{\refstepcounter{problem}\par\medskip
+   \noindent {\fontsize{11}{13}\selectfont\textbf{Problem~\theproblem. #1}}\rmfamily}{\medskip}
+   % \noindent \textbf{Problem~\theproblem. #1}\normalsize\rmfamily}{\medskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document metadata
+\author{\AUTHOR}
+\date{\today}
+
+\endinput
