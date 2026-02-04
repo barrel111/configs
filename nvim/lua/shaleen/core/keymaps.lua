@@ -59,3 +59,39 @@ keymap.set(
 
 -- vimtex
 keymap.set("n", "<leader>ll", "<cmd>VimtexCompile<cr>")
+
+keymap.set("n", "<leader>tq", function()
+  local win = vim.fn.getqflist({ winid = 0 }).winid
+  if win ~= 0 then
+    vim.cmd("cclose")
+  else
+    vim.cmd("copen")
+  end
+end, { desc = "Toggle quickfix" })
+
+local ALL_WARNING_PATTERNS = {
+  ".*Warning.*",
+}
+
+keymap.set("n", "<leader>tw", function()
+  -- If filters are active, restore; otherwise apply the hide-all-warnings filter
+  local currently_hidden = vim.g._hide_all_tex_warnings
+
+  if currently_hidden then
+    -- Turn warnings back ON
+    vim.g.vimtex_quickfix_ignore_filters = {}
+    vim.g._hide_all_tex_warnings = false
+    print("VimTeX warnings: ON")
+  else
+    -- Turn warnings OFF (hide them all)
+    vim.g.vimtex_quickfix_ignore_filters = ALL_WARNING_PATTERNS
+    vim.g._hide_all_tex_warnings = true
+    print("VimTeX warnings: OFF")
+  end
+
+  -- Close quickfix if open
+  local qf = vim.fn.getqflist({ winid = 0 }).winid
+  if qf ~= 0 then
+    vim.cmd("cclose")
+  end
+end, { desc = "Toggle ALL LaTeX warnings + close quickfix" })

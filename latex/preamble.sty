@@ -12,6 +12,7 @@
 
 % Mathematics packages
 \RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{bm}
 \RequirePackage{bbm}
 % \RequirePackage{mathrsfs}
 
@@ -30,11 +31,15 @@
 % Fonts + Syntax Highlighting
 \RequirePackage{newpxtext}
 \RequirePackage{newpxmath}
-\RequirePackage[scale=0.9]{sourcecodepro}
-\RequirePackage{minted}
-\AtBeginDocument{
-  \setminted{style=gruvbox-light, fontsize=\small}
-}
+% \RequirePackage{kpfonts}
+% \RequirePackage{libertine}
+% \RequirePackage[T1]{fontenc}
+% \RequirePackage[libertine]{newtxmath}
+% \RequirePackage[scale=1]{sourcecodepro}
+% \RequirePackage{minted}
+% \AtBeginDocument{
+%   \setminted{style=gruvbox-light, fontsize=\small}
+% }
 
 \RequirePackage{hyperref}
 \hypersetup{
@@ -107,6 +112,8 @@
 % Page styles and cover page handling
 \RequirePackage{fancyhdr}
 
+\setlength{\headheight}{13.59999pt}
+
 \fancypagestyle{fancydefault}{
   \fancyhf{}
   \fancyhead[L]{\nouppercase{\leftmark}}
@@ -114,6 +121,7 @@
   \renewcommand{\headrulewidth}{0.4pt}
   \renewcommand{\footrulewidth}{0pt}
 }
+
 
 \fancypagestyle{cover}{
   \fancyhf{}
@@ -141,8 +149,7 @@
 % Mathematical operators and notation
 
 % ----------------------------------------------------------------
-% Safe fallback for LaTeX3-style bold math
-\providecommand{\symbf}{\mathbf}
+\providecommand{\symbf}{\boldsymbol}
 
 % ----------------------------------------------------------------
 % Basic delimiters
@@ -245,7 +252,6 @@
 \NewDocumentCommand{\littleo}{m}{o\parens{#1}}
 \NewDocumentCommand{\littleomega}{m}{\omega\parens{#1}}
 
-% Polylogarithms and growth rates
 \DeclareMathOperator{\poly}{poly}
 \DeclareMathOperator{\polylog}{poly(log)}
 \DeclareMathOperator{\quasipoly}{quasipoly}
@@ -259,13 +265,12 @@
 \NewDocumentCommand{\st}{m}{\Otilde{#1}}        % Ō(n) "softly bounded"
 \NewDocumentCommand{\gt}{m}{\littleomega{#1}}   % ω(n)
 
-% Growth hierarchy commentary macros
+% Growth hierarchy 
 \NewDocumentCommand{\polytime}{}{\class{P}}
 \NewDocumentCommand{\NPtime}{}{\class{NP}}
 \NewDocumentCommand{\BPPtime}{}{\class{BPP}}
 \NewDocumentCommand{\EXPtime}{}{\class{EXP}}
 
-% Standard soft equalities (common in analysis)
 \NewDocumentCommand{\defeq}{}{\vcentcolon=}
 \NewDocumentCommand{\eqdef}{}{=\vcentcolon}
 
@@ -286,20 +291,16 @@
 \newtheorem{notation}[theorem]{Notation}
 \newtheorem*{notation*}{Notation}
 
-% --- Remark style: informal commentary ---
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-% --- Starred (unnumbered) versions for convenience ---
 \newtheorem*{theorem*}{Theorem}
 \newtheorem*{lemma*}{Lemma}
 \newtheorem*{definition*}{Definition}
 \newtheorem*{example*}{Example}
 
-% --- Proof heading customization ---
 \renewcommand*{\proofname}{Proof}
 
-% shorthand labeling convention 
 \newcommand{\thmlabel}[1]{\label{thm:#1}}
 \newcommand{\lemlabel}[1]{\label{lem:#1}}
 \newcommand{\deflabel}[1]{\label{def:#1}}
@@ -347,15 +348,15 @@
 \makeatother
 
 % Algorithm customizations
-\definecolor{algcomment}{gray}{0.35}
-\renewcommand{\Call}[1]{\textbf{call }#1}
-\algrenewcommand\algorithmicrequire{\textbf{assuming:}}
-\algrenewcommand\algorithmiccomment[1]{\hfill{\color{algcomment}$\blacktriangleright$~#1}}
+% \definecolor{algcomment}{gray}{0.35}
+% \renewcommand{\Call}[1]{\textbf{call }#1}
+% \algrenewcommand\algorithmicrequire{\textbf{assuming:}}
+% \algrenewcommand\algorithmiccomment[1]{\hfill{\color{algcomment}$\blacktriangleright$~#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem environment 
 \newcounter{problem}[section]
-\renewcommand{\theproblem}{\thesection.\arabic{problem}}
+\renewcommand{\theproblem}{\arabic{problem}.}
 
 \NewDocumentEnvironment{problem}{o}
 {
