@@ -5,6 +5,7 @@ export AUTHOR="Shaleen Baral"
 ZSH_THEME="awesomepanda"
 
 plugins=(
+  vi-mode
   zsh-autosuggestions
   git
   )
@@ -36,5 +37,9 @@ export PATH
 eval "$(pyenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
-# <<< CS3410 <<<
+# >>> CS3410 >>>
 alias rv='docker run -i --init -e NETID=sb969 --rm -v "$PWD":/root --name cs3410 ghcr.io/sampsyo/cs3410-infra'
+alias rv-debug='docker run -it --rm --init -e NETID=sb969 --name testing --ulimit core=-1 --mount type=bind,source="$PWD"/,target="$PWD"/ -v "$PWD":/root ghcr.io/sampsyo/cs3410-infra'
+
+# >>> CS4411 >>>
+alias eos='docker run -it -v ${PWD}:/embryos --rm embryos'
