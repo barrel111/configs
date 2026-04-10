@@ -206,3 +206,7 @@ run = "move-node-to-workspace P" #mnemonics P - non-authored documents
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace S" #mnemonics S - slack
+
+[[on-window-detected]]
+if.app-id = 'com.valvesoftware.steam.helper'
+run = 'layout tiling'
