@@ -1,0 +1,367 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{preamble-legacy}[Legacy preamble — v1 = kpfonts era, v2 = newpx era (default)]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Options
+\newif\iflegacy@vone  % v1 = kpfonts era; default is v2
+
+\DeclareOption{v1}{\legacy@vonetrue}
+\DeclareOption{v2}{}
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Core packages (shared)
+\iflegacy@vone\RequirePackage[utf8]{inputenc}\fi
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{xparse}
+
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\iflegacy@vone
+  \RequirePackage{amsfonts,mathrsfs,bbm}
+\else
+  \RequirePackage{fix-cm,bm,dsfont}
+\fi
+
+\RequirePackage[shortlabels]{enumitem}
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+\RequirePackage{multicol}
+\RequirePackage{marvosym}
+\RequirePackage{fancyhdr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts
+\iflegacy@vone
+  \RequirePackage{kpfonts}
+  \RequirePackage[scale=0.85]{sourcecodepro}
+  \RequirePackage{minted}
+  \setminted{style=gruvbox-light}
+\else
+  \RequirePackage{newpxtext,newpxmath}
+  \providecommand{\symbf}{\boldsymbol}
+  \RequirePackage{hyperref}
+  \hypersetup{colorlinks=true, linkcolor=cyan, filecolor=red, urlcolor=blue}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Environment variable handling (shared)
+\ExplSyntaxOn
+\NewDocumentCommand{\getenv}{om}
+{
+  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
+  \tl_trim_spaces:N \l_tmpa_tl
+  \IfNoValueTF { #1 }
+  { \tl_use:N \l_tmpa_tl }
+  { \tl_set_eq:NN #1 \l_tmpa_tl }
+}
+\ExplSyntaxOff
+\getenv[\AUTHOR]{AUTHOR}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page styles
+\iflegacy@vone
+  \pagestyle{fancy}
+  \fancyhf{}
+  \graphicspath{{./images/}}
+\else
+  \setlength{\headheight}{13.59999pt}
+  \fancypagestyle{fancydefault}{
+    \fancyhf{}
+    \fancyhead[L]{\nouppercase{\leftmark}}
+    \fancyhead[R]{\thepage}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0pt}
+  }
+  \fancypagestyle{cover}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+  }
+  \pagestyle{fancydefault}
+  \newif\ifcoverpage
+  \AtBeginDocument{
+    \ifcoverpage\thispagestyle{cover}\else\thispagestyle{fancydefault}\fi
+  }
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title and subtitle (v2 only)
+\iflegacy@vone\else
+  \NewDocumentCommand{\subtitle}{m}{\gdef\@subtitle{#1}}
+  \providecommand{\@subtitle}{}
+  \RenewDocumentCommand{\maketitle}{}{
+    \ifcoverpage
+      \thispagestyle{cover}
+      \begin{titlepage}
+        \vspace*{\fill}
+        \begin{center}
+          {\LARGE\bfseries \@title \par}
+          \ifx\@subtitle\@empty\else\vskip0.8em{\large\itshape \@subtitle \par}\fi
+          \vskip1.2em {\large \@author \par}
+          \vskip0.8em {\normalsize \@date \par}
+        \end{center}
+        \vspace*{\fill}
+        \clearpage
+      \end{titlepage}
+    \else
+      \begin{center}
+        {\LARGE\bfseries \@title \par}
+        \ifx\@subtitle\@empty\else\vskip0.5em{\large\itshape \@subtitle \par}\fi
+        \vskip1em {\large \@author \par}
+        \vskip0.5em {\normalsize \@date \par}
+      \end{center}
+      \vskip2em
+    \fi
+  }
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematical operators
+
+\iflegacy@vone
+  \DeclareMathOperator{\cis}{cis}
+  \DeclareMathOperator{\re}{Re}
+  \DeclareMathOperator*{\argmax}{arg\,max}
+  \DeclareMathOperator*{\argmin}{arg\,min}
+  \renewcommand{\dim}{\mathrm{dim}}
+  \renewcommand{\ker}{\mathrm{Ker}}
+  \newcommand{\im}{\mathrm{Im}}
+  \newcommand{\tr}{\mathrm{tr}}
+  \newcommand{\id}{\mathrm{id}}
+  \newcommand{\Id}{\mathrm{Id}}
+\else
+  \let\Re\relax \let\Im\relax
+  \DeclareMathOperator{\Re}{Re}
+  \DeclareMathOperator{\Im}{Im}
+  \DeclareMathOperator{\Rk}{rk}
+  \DeclareMathOperator{\tr}{tr}
+  \DeclareMathOperator{\Id}{Id}
+  \DeclareMathOperator{\id}{id}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Delimiters (v2 only)
+\iflegacy@vone\else
+  \DeclarePairedDelimiter{\parens}{(}{)}
+  \DeclarePairedDelimiter{\bracks}{[}{]}
+  \DeclarePairedDelimiter{\braces}{\lbrace}{\rbrace}
+  \DeclarePairedDelimiterX{\set}[2]{\lbrace}{\rbrace}{#1 \;\delimsize\vert\; #2}
+  \DeclarePairedDelimiter{\ang}{\langle}{\rangle}
+  \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+  \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+  \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+  \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+  \DeclarePairedDelimiterX{\inner@delim}[2]{\langle}{\rangle}{#1,\,#2}
+  \NewDocumentCommand{\inner}{s m m o}{%
+    \IfBooleanTF{#1}{\inner@delim*{#2}{#3}}{\inner@delim{#2}{#3}}%
+    \IfValueT{#4}{_{#4}}%
+  }
+  \NewDocumentCommand{\normp}{smm}{
+    \IfBooleanTF{#1}{\norm*{#2}_{#3}}{\norm{#2}_{#3}}
+  }
+  \NewDocumentCommand{\Lp}{m o}{
+    \IfNoValueTF{#2}{L^{#1}}{L^{#1}\!\left(#2\right)}
+  }
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Probability and statistics
+
+\newcommand{\E}{\mathbb{E}}
+
+\iflegacy@vone\else
+  \let\Pr\relax
+  \newcommand{\Pr}{\mathbb{P}}
+  \newcommand{\Var}{\mathbf{Var}}
+  \newcommand{\Cov}{\mathbf{Cov}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Blackboard bold symbols
+
+\iflegacy@vone
+  \newcommand{\1}{\mathbbm{1}}
+  \newcommand\N{\ensuremath{\mathbb{N}}}
+  \newcommand\Z{\ensuremath{\mathbb{Z}}}
+  \newcommand\Q{\ensuremath{\mathbb{Q}}}
+  \newcommand\R{\ensuremath{\mathbb{R}}}
+  \newcommand\C{\ensuremath{\mathbb{C}}}
+  \renewcommand\O{\ensuremath{\emptyset}}
+\else
+  \NewDocumentCommand{\1}{}{\mathds{1}}
+  \NewDocumentCommand{\N}{}{\mathbb{N}}
+  \NewDocumentCommand{\Z}{}{\mathbb{Z}}
+  \NewDocumentCommand{\Q}{}{\mathbb{Q}}
+  \NewDocumentCommand{\R}{}{\mathbb{R}}
+  \NewDocumentCommand{\C}{}{\mathbb{C}}
+  \providecommand{\Empty}{\varnothing}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Miscellaneous notation
+
+\iflegacy@vone
+  \newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+  \newcommand{\inv}{^{-1}}
+  \newcommand{\vv}[1]{\boldsymbol{#1}}
+\else
+  \NewDocumentCommand{\Lim}{m}{\lim\limits_{#1}}
+  \NewDocumentCommand{\inv}{}{{}^{-1}}
+  \RenewDocumentCommand{\vv}{m}{\symbf{#1}}
+  \newcommand{\eps}{\varepsilon}
+  \newcommand{\del}{\delta}
+  \newcommand{\lam}{\lambda}
+  \NewDocumentCommand{\defeq}{}{\vcentcolon=}
+  \NewDocumentCommand{\eqdef}{}{=\vcentcolon}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Complexity notation (v2 only)
+\iflegacy@vone\else
+  \NewDocumentCommand{\class}{m}{\mathsf{#1}}
+  \NewDocumentCommand{\Otilde}{m}{\tilde{\mathcal{O}}\parens{#1}}
+  \NewDocumentCommand{\Ohat}{m}{\widehat{\mathcal{O}}\parens{#1}}
+  \NewDocumentCommand{\Omegahat}{m}{\widehat{\Omega}\parens{#1}}
+  \NewDocumentCommand{\bigO}{m}{\mathcal{O}\parens{#1}}
+  \NewDocumentCommand{\bigTheta}{m}{\Theta\parens{#1}}
+  \NewDocumentCommand{\bigOmega}{m}{\Omega\parens{#1}}
+  \NewDocumentCommand{\littleo}{m}{o\parens{#1}}
+  \NewDocumentCommand{\littleomega}{m}{\omega\parens{#1}}
+  \DeclareMathOperator{\poly}{poly}
+  \DeclareMathOperator{\polylog}{polylog}
+  \DeclareMathOperator{\quasipoly}{quasipoly}
+  \NewDocumentCommand{\simconst}{}{\mathrel{\asymp}}
+  \NewDocumentCommand{\lt}{m}{\littleo{#1}}
+  \NewDocumentCommand{\st}{m}{\Otilde{#1}}
+  \NewDocumentCommand{\gt}{m}{\littleomega{#1}}
+  \NewDocumentCommand{\polytime}{}{\class{P}}
+  \NewDocumentCommand{\NPtime}{}{\class{NP}}
+  \NewDocumentCommand{\BPPtime}{}{\class{BPP}}
+  \NewDocumentCommand{\EXPtime}{}{\class{EXP}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem environments
+
+\theoremstyle{plain}
+\iflegacy@vone
+  \newtheorem{theorem}{Theorem}[section]
+\else
+  \newtheorem{theorem}{Theorem}
+\fi
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
+
+\iflegacy@vone
+  \newtheorem{proposition}[theorem]{Proposition}
+\else
+  \newtheorem{claim}[theorem]{Claim}
+\fi
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{example*}{Example}
+
+\iflegacy@vone
+  \newtheorem{conjecture}{Conjecture}[section]
+  \newtheorem{question}{Question}[section]
+  \newtheorem*{question*}{Question}
+\else
+  \newtheorem{notation}[theorem]{Notation}
+  \newtheorem*{notation*}{Notation}
+\fi
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\iflegacy@vone
+  \newtheorem*{claim}{Claim}
+  \newtheorem*{note}{Note}
+  \newtheorem*{exercise}{Exercise}
+  \newtheorem*{notation*}{Notation}
+\fi
+
+\renewcommand*{\proofname}{Proof}
+
+% Theorem numbering toggles (v2 only)
+\iflegacy@vone\else
+  \newcommand{\theorembysection}{%
+    \counterwithout{theorem}{problem}%
+    \counterwithin{theorem}{section}%
+  }
+  \newcommand{\theorembyproblem}{%
+    \counterwithout{theorem}{section}%
+    \counterwithin{theorem}{problem}%
+  }
+  \newcommand{\thmlabel}[1]{\label{thm:#1}}
+  \newcommand{\lemlabel}[1]{\label{lem:#1}}
+  \newcommand{\deflabel}[1]{\label{def:#1}}
+
+  \def\th@plain{\thm@notefont{\scshape}\itshape}
+  \def\th@definition{\thm@notefont{\scshape}\normalfont}
+  \def\th@remark{\thm@notefont{\scshape}\normalfont}
+  \def\popQED{\par\nobreak\hfill\qedsymbol\@endpefalse\par}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Algorithm customizations (v1 only)
+\iflegacy@vone
+  \renewcommand{\Call}[1]{\textbf{Call }#1}
+  \algrenewcommand\algorithmicrequire{\textbf{assuming:}}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Breakable algorithm environment (shared)
+\newenvironment{breakablealgorithm}
+{% \begin{breakablealgorithm}
+  \begin{center}
+    \refstepcounter{algorithm}
+    \hrule height.8pt depth0pt \kern2pt
+    \renewcommand{\caption}[2][\relax]{%
+      {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+      \ifx\relax##1\relax
+        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+      \else
+        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+      \fi
+      \kern2pt\hrule\kern2pt
+    }
+}{% \end{breakablealgorithm}
+    \kern2pt\hrule\relax
+  \end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Problem environment
+
+\newcounter{problem}[section]
+\iflegacy@vone
+  \newenvironment{problem}[1][]{\refstepcounter{problem}\par\medskip
+    \noindent{\fontsize{11}{13}\selectfont\textbf{Problem~\theproblem. #1}}\rmfamily}{\medskip}
+\else
+  \renewcommand{\theproblem}{\arabic{problem}.}
+  \NewDocumentEnvironment{problem}{o}
+  {
+    \refstepcounter{problem}
+    \par\vspace{0.5\baselineskip}
+    \noindent\large\textbf{Problem~\theproblem}%
+    \IfValueT{#1}{\textbf{ (#1)}}%
+    \par\nobreak\vspace{0.25\baselineskip}\noindent\normalsize
+  }
+  { \par\vspace{0.5\baselineskip} }
+\fi
+
+\iflegacy@vone\else\theorembysection\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document metadata
+\author{\AUTHOR}
+\date{\today}
+
+\endinput

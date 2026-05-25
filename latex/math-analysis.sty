@@ -1,0 +1,31 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{math-analysis}[2025/05/24 v1.0 Linear and functional analysis notation]
+
+% Note: \dim, \ker, \det are provided by amsmath
+\DeclareMathOperator{\Rk}{rk}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\id}{id}
+
+% Inner product: \inner{u}{v} fixed, \inner*{u}{v} auto-scaled, \inner{u}{v}[H] subscripted
+\DeclarePairedDelimiterX{\inner@delim}[2]{\langle}{\rangle}{#1,\,#2}
+\NewDocumentCommand{\inner}{s m m o}{%
+  \IfBooleanTF{#1}{\inner@delim*{#2}{#3}}{\inner@delim{#2}{#3}}%
+  \IfValueT{#4}{_{#4}}%
+}
+
+% \normp{x}{p} fixed size, \normp*{x}{p} auto-scaled
+\NewDocumentCommand{\normp}{smm}{
+  \IfBooleanTF{#1}
+    {\norm*{#2}_{#3}}
+    {\norm{#2}_{#3}}
+}
+
+% L^p space: \Lp{p} or \Lp{p}[\Omega]
+\NewDocumentCommand{\Lp}{m o}{
+  \IfNoValueTF{#2}
+    {L^{#1}}
+    {L^{#1}\!\parens*{#2}}
+}
+
+\endinput
