@@ -6,6 +6,11 @@ vim.g.maplocalleader = ","
 -- move cursor
 keymap.set("n", " ", "<Nop>")
 
+keymap.set("n", "<C-h>", "<C-w>h")
+keymap.set("n", "<C-j>", "<C-w>j")
+keymap.set("n", "<C-k>", "<C-w>k")
+keymap.set("n", "<C-l>", "<C-w>l")
+
 -- general keymaps
 -- keymap.set("i", "jk", "<ESC>")
 keymap.set("n", "<leader>hh", ":nohl<CR>")
@@ -14,7 +19,7 @@ keymap.set("n", "<leader>hh", ":nohl<CR>")
 keymap.set("n", "j", "gj")
 keymap.set("n", "k", "gk")
 
-keymap.set("n", "<leader>bb", "<C-^><CR>")
+keymap.set("n", "<leader>bb", "<C-^>")
 keymap.set("n", "<leader>+", "<C-a>")
 keymap.set("n", "<leader>-", "<C-x>")
 
@@ -28,9 +33,17 @@ keymap.set("n", "<leader>tx", ":tabclose<CR>")
 keymap.set("n", "<leader>tn", ":tabn<CR>")
 keymap.set("n", "<leader>tp", ":tabp<CR>")
 
--- plugin keymaps
--- vim maximizer
-keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
+local _maximized = false
+keymap.set("n", "<leader>sm", function()
+  if _maximized then
+    vim.cmd("wincmd =")
+    _maximized = false
+  else
+    vim.cmd("wincmd |")
+    vim.cmd("wincmd _")
+    _maximized = true
+  end
+end)
 
 -- nvim-tree
 keymap.set("n", "<leader>e", ":NvimTreeToggle<Cr>")
@@ -54,7 +67,7 @@ keymap.set(
   "n",
   "<leader>L",
   '<cmd>lua require("luasnip.loaders.from_lua").load'
-  .. '({paths = "~/.config/nvim/lua/shallen/plugins/luasnip/"})<CR>'
+  .. '({paths = "~/.config/nvim/lua/shaleen/plugins/luasnip/"})<CR>'
 )
 
 -- vimtex

@@ -3,10 +3,6 @@ if not setup then
   return
 end
 
--- nvim-tree recommended settings
-vim.g.loaded = 1
-vim.g.loaded_netrwPlugin = 1
-
 nvimtree.setup({
   actions = {
     open_file = {

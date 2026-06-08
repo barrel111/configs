@@ -3,15 +3,18 @@ all the configs i'll ever need.
 
 it's easiest to set up via symlinks. i have just provided relative paths here, but symlinks tend to prefer absolute ones. just run the following set of commands.
 
-to set up iterm2, first import the json profile. also under appearance>general set theme:minimal. we also setup oh-my-zsh. 
+install dependencies:
+```bash
+./scripts/install.sh  # see scripts/Brewfile for full dep list
+```
+
+set up oh-my-zsh and symlink zshrc:
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-brew install --cask font-jetbrains-mono
-brew install --cask font-jetbrains-mono-nerd-font
 ln -sf ./.zshrc ~/.zshrc
 ```
 
-install typst, nvim, aerospace via brew. install the MacTeX distribution. 
+install the MacTeX distribution manually. set up iterm2 by importing the json profile; under appearance>general set theme:minimal.
 
 currently the following is my setup.
 ```shell

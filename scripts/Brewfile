@@ -1,0 +1,16 @@
+# fonts
+cask "font-jetbrains-mono"
+cask "font-jetbrains-mono-nerd-font"
+
+# apps
+cask "aerospace"
+cask "ghostty"
+cask "sioyek"
+brew "neovim"
+brew "typst"
+brew "opam"
+
+# lsp servers
+brew "lua-language-server"
+brew "texlab"
+# clangd: xcode-select --install

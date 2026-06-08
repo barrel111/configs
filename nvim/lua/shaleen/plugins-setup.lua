@@ -1,145 +1,103 @@
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-    vim.cmd([[packadd packer.nvim]])
-    return true
-  end
-  return false
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins-setup.lua source <afile> | PackerSync
-  augroup end
-]])
-
-local packer_bootstrap = ensure_packer()
-
-return require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
-
+require("lazy").setup({
   -- lua functions that other plugins may use
-  use("nvim-lua/plenary.nvim")
+  "nvim-lua/plenary.nvim",
 
   -- theme
-  use("ellisonleao/gruvbox.nvim")
-
-  -- window management
-  use("christoomey/vim-tmux-navigator")
-  use("szw/vim-maximizer")
+  "ellisonleao/gruvbox.nvim",
 
   -- convenience
-  use("tpope/vim-surround")
-  use("numToStr/Comment.nvim")
-
-  -- file explorer
-  use("nvim-tree/nvim-tree.lua")
+  "tpope/vim-surround",
 
   -- icons
-  use("kyazdani42/nvim-web-devicons")
+  "nvim-tree/nvim-web-devicons",
+
+  -- file explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("shaleen.plugins.nvim-tree")
+    end,
+  },
 
   -- status-line
-  use("nvim-lualine/lualine.nvim")
+  "nvim-lualine/lualine.nvim",
 
   -- telescope/fuzzy-finding
-  -- dependency for better sorting performanc
-  use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-  -- fuzzy finder
-  use({
-    "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
-  })
+  {
+    'nvim-telescope/telescope.nvim',
+    version = '*',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    }
+  },
 
   -- autocompletion
-  use("hrsh7th/nvim-cmp")
-  use("hrsh7th/cmp-buffer")
-  use("hrsh7th/cmp-path")
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-path",
 
   -- snippets
-  use("L3MON4D3/LuaSnip")
-  use("saadparwaiz1/cmp_luasnip")
-  use("rafamadriz/friendly-snippets")
-
-  -- lsp installation and management
-  use("mason-org/mason.nvim")
-  use("mason-org/mason-lspconfig.nvim")
+  "L3MON4D3/LuaSnip",
+  "saadparwaiz1/cmp_luasnip",
 
   -- lsp config
-  use("neovim/nvim-lspconfig")
+  "neovim/nvim-lspconfig",
 
   -- lsp integration with other plugins
-  use("hrsh7th/cmp-nvim-lsp") -- adds lsp source for autocompletion
-  use({
-    "nvimdev/lspsaga.nvim",   -- adds ui for lsp info
-    branch = "main",
-    requires = {
-      { "nvim-tree/nvim-web-devicons" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
-  })
-
-  -- lsp signature help
-  use("ray-x/lsp_signature.nvim")
-
-  -- vscode like icons for lsp
-  use("onsails/lspkind.nvim")
+  "hrsh7th/cmp-nvim-lsp",
 
   -- linters and formatters
-  use("stevearc/conform.nvim")
+  "stevearc/conform.nvim",
 
   -- treesitter
-  use({
+  {
     "nvim-treesitter/nvim-treesitter",
-    run = function()
+    build = function()
       local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
       ts_update()
     end,
-  })
+  },
 
   -- brackets
-  use("windwp/nvim-autopairs")
-  use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" })
+  "windwp/nvim-autopairs",
 
   -- git integration
-  use("lewis6991/gitsigns.nvim")
+  "lewis6991/gitsigns.nvim",
 
   -- vimtex
-  use("lervag/vimtex")
+  "lervag/vimtex",
 
   -- typst
-  use {
-    'chomosuke/typst-preview.nvim',
-    tag = 'v0.3.*',
-    run = function() require 'typst-preview'.update() end,
-  }
-
-  use { 'kaarmu/typst.vim', ft = { 'typst' } }
+  {
+    "chomosuke/typst-preview.nvim",
+    ft = { "typst" },
+    version = "1.*",
+    opts = {},
+  },
+  { "kaarmu/typst.vim",  ft = { "typst" } },
 
   -- quarto
-  use {
-    "jmbuhr/otter.nvim",
-    commit = "f3a4018",
-  }
-  use {
-    "quarto-dev/quarto-nvim",
-  }
+  { "jmbuhr/otter.nvim", commit = "f3a4018" },
+  "quarto-dev/quarto-nvim",
 
   -- zotero
-  use(
-    {
-      'jmbuhr/telescope-zotero.nvim',
-      requires = {
-        { 'kkharji/sqlite.lua' },
-      },
-      opts = {},
-    }
-  )
+  {
+    "jmbuhr/telescope-zotero.nvim",
+    dependencies = { "kkharji/sqlite.lua" },
+  },
 
-  use({ "jmbuhr/cmp-pandoc-references" })
-
-  -- haskell-tools
-  -- use("mrcjkb/haskell-tools.nvim")
-end)
+  "jmbuhr/cmp-pandoc-references",
+}, { rocks = { enabled = false } })

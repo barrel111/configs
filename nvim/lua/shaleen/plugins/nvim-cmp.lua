@@ -8,11 +8,6 @@ if not luasnip_status then
   return
 end
 
-local lspkind_status, lspkind = pcall(require, "lspkind")
-if not lspkind_status then
-  return
-end
-
 vim.opt.completeopt = "menu,menuone,noselect"
 
 cmp.setup({
@@ -36,7 +31,7 @@ cmp.setup({
         fallback()
       end
     end, { "i", "s" }),
-    ["<S-Tab"] = cmp.mapping(function(fallback)
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
       if luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
@@ -51,14 +46,7 @@ cmp.setup({
     { name = "luasnip" },           -- snippets
     { name = "buffer" },            -- text within current buffer
     { name = "path" },              -- file system paths
-    { name = "pandoc_references " } -- references
+    { name = "pandoc_references" } -- references
   }),
 
-  -- configure lspkind for vs-code like icons
-  formatting = {
-    format = lspkind.cmp_format({
-      maxwidth = 50,
-      ellipsis_char = "...",
-    }),
-  },
 })

@@ -1,5 +1,4 @@
 local has_treesitter, ts = pcall(require, "vim.treesitter")
-local _, query = pcall(require, "vim.treesitter.query")
 
 local M = {}
 
@@ -42,8 +41,8 @@ function M.in_comment()
 			end
 			node = node:parent()
 		end
-		return false
 	end
+	return false
 end
 
 function M.in_mathzone()
@@ -58,14 +57,14 @@ function M.in_mathzone()
 				local begin = node:child(0)
 				local names = begin and begin:field("name")
 
-				if names and names[1] and MATH_ENVIRONMENTS[query.get_node_text(names[1], buf):gsub("[%s*]", "")] then
+				if names and names[1] and MATH_ENVIRONMENTS[ts.get_node_text(names[1], buf):gsub("[%s*]", "")] then
 					return true
 				end
 			end
 			node = node:parent()
 		end
-		return false
 	end
+	return false
 end
 
 return M

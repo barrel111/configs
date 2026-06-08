@@ -3,191 +3,79 @@ local s = ls.snippet
 local t = ls.text_node
 
 return {
-	s({ trig = ";a", snippetType = "autosnippet" }, {
-		t("\\alpha"),
-	}),
+  -- alpha
+  s({ trig = ";a", snippetType = "autosnippet" }, { t("\\alpha") }),
 
-	s({ trig = ";A", snippetType = "autosnippet" }, {
-		t("\\Alpha"),
-	}),
+  -- beta
+  s({ trig = ";b", snippetType = "autosnippet" }, { t("\\beta") }),
 
-	s({ trig = ";b", snippettype = "autosnippet" }, {
-		t("\\beta"),
-	}),
+  -- gamma
+  s({ trig = ";g", snippetType = "autosnippet" }, { t("\\gamma") }),
 
-	s({ trig = ";b", snippettype = "autosnippet" }, {
-		t("\\beta"),
-	}),
+  -- delta / Delta
+  s({ trig = ";d", snippetType = "autosnippet" }, { t("\\delta") }),
+  s({ trig = ";D", snippetType = "autosnippet" }, { t("\\Delta") }),
 
-	s({ trig = ";g", snippetType = "autosnippet" }, {
-		t("\\gamma"),
-	}),
+  -- epsilon
+  s({ trig = ";e", snippetType = "autosnippet" }, { t("\\epsilon") }),
 
-	s({ trig = ";d", snippetType = "autosnippet" }, {
-		t("\\delta"),
-	}),
+  -- zeta
+  s({ trig = ";z", snippetType = "autosnippet" }, { t("\\zeta") }),
 
-	s({ trig = ";D", snippetType = "autosnippet" }, {
-		t("\\delta"),
-	}),
+  -- eta
+  s({ trig = ";h", snippetType = "autosnippet" }, { t("\\eta") }),
 
-	s({ trig = ";e", snippetType = "autosnippet" }, {
-		t("\\epsilon"),
-	}),
+  -- theta / Theta  (;0 = zero, looks like theta; ;T repurposed from invalid \Tau)
+  s({ trig = ";0", snippetType = "autosnippet" }, { t("\\theta") }),
+  s({ trig = ";T", snippetType = "autosnippet" }, { t("\\Theta") }),
 
-	s({ trig = ";E", snippetType = "autosnippet" }, {
-		t("\\Epsilon"),
-	}),
+  -- iota
+  s({ trig = ";i", snippetType = "autosnippet" }, { t("\\iota") }),
 
-	s({ trig = ";z", snippetType = "autosnippet" }, {
-		t("\\zeta"),
-	}),
+  -- kappa
+  s({ trig = ";k", snippetType = "autosnippet" }, { t("\\kappa") }),
 
-	s({ trig = ";Z", snippetType = "autosnippet" }, {
-		t("\\Zeta"),
-	}),
+  -- lambda / Lambda
+  s({ trig = ";l", snippetType = "autosnippet" }, { t("\\lambda") }),
+  s({ trig = ";L", snippetType = "autosnippet" }, { t("\\Lambda") }),
 
-	s({ trig = ";h", snippetType = "autosnippet" }, {
-		t("\\eta"),
-	}),
+  -- mu
+  s({ trig = ";m", snippetType = "autosnippet" }, { t("\\mu") }),
 
-	s({ trig = ";H", snippetType = "autosnippet" }, {
-		t("\\Eta"),
-	}),
+  -- nu
+  s({ trig = ";n", snippetType = "autosnippet" }, { t("\\nu") }),
 
-	s({ trig = ";0", snippetType = "autosnippet" }, {
-		t("\\theta"),
-	}),
+  -- xi / Xi
+  s({ trig = ";x", snippetType = "autosnippet" }, { t("\\xi") }),
+  s({ trig = ";X", snippetType = "autosnippet" }, { t("\\Xi") }),
 
-	s({ trig = ";0", snippetType = "autosnippet" }, {
-		t("\\Theta"),
-	}),
+  -- omega / Omega  (omicron has no LaTeX command — it's just 'o')
+  s({ trig = ";o", snippetType = "autosnippet" }, { t("\\omega") }),
+  s({ trig = ";O", snippetType = "autosnippet" }, { t("\\Omega") }),
 
-	s({ trig = ";i", snippetType = "autosnippet" }, {
-		t("\\iota"),
-	}),
+  -- pi / Pi
+  s({ trig = ";p", snippetType = "autosnippet" }, { t("\\pi") }),
+  s({ trig = ";P", snippetType = "autosnippet" }, { t("\\Pi") }),
 
-	s({ trig = ";I", snippetType = "autosnippet" }, {
-		t("\\Iota"),
-	}),
+  -- rho
+  s({ trig = ";r", snippetType = "autosnippet" }, { t("\\rho") }),
 
-	s({ trig = ";k", snippetType = "autosnippet" }, {
-		t("\\kappa"),
-	}),
+  -- sigma / Sigma
+  s({ trig = ";s", snippetType = "autosnippet" }, { t("\\sigma") }),
+  s({ trig = ";S", snippetType = "autosnippet" }, { t("\\Sigma") }),
 
-	s({ trig = ";K", snippetType = "autosnippet" }, {
-		t("\\Kappa"),
-	}),
+  -- tau
+  s({ trig = ";t", snippetType = "autosnippet" }, { t("\\tau") }),
 
-	s({ trig = ";l", snippetType = "autosnippet" }, {
-		t("\\lambda"),
-	}),
+  -- upsilon / Upsilon
+  s({ trig = ";u", snippetType = "autosnippet" }, { t("\\upsilon") }),
+  s({ trig = ";U", snippetType = "autosnippet" }, { t("\\Upsilon") }),
 
-	s({ trig = ";L", snippetType = "autosnippet" }, {
-		t("\\Lambda"),
-	}),
+  -- phi / Phi
+  s({ trig = ";f", snippetType = "autosnippet" }, { t("\\phi") }),
+  s({ trig = ";F", snippetType = "autosnippet" }, { t("\\Phi") }),
 
-	s({ trig = ";m", snippetType = "autosnippet" }, {
-		t("\\mu"),
-	}),
-
-	s({ trig = ";M", snippetType = "autosnippet" }, {
-		t("\\Mu"),
-	}),
-
-	s({ trig = ";n", snippetType = "autosnippet" }, {
-		t("\\nu"),
-	}),
-
-	s({ trig = ";N", snippetType = "autosnippet" }, {
-		t("\\Nu"),
-	}),
-
-	s({ trig = ";x", snippetType = "autosnippet" }, {
-		t("\\xi"),
-	}),
-
-	s({ trig = ";X", snippetType = "autosnippet" }, {
-		t("\\Xi"),
-	}),
-
-	s({ trig = ";o", snippetType = "autosnippet" }, {
-		t("\\omicron"),
-	}),
-
-	s({ trig = ";O", snippetType = "autosnippet" }, {
-		t("\\Omicron"),
-	}),
-
-	s({ trig = ";p", snippetType = "autosnippet" }, {
-		t("\\pi"),
-	}),
-
-	s({ trig = ";P", snippetType = "autosnippet" }, {
-		t("\\Pi"),
-	}),
-
-	s({ trig = ";r", snippetType = "autosnippet" }, {
-		t("\\rho"),
-	}),
-
-	s({ trig = ";R", snippetType = "autosnippet" }, {
-		t("\\Rho"),
-	}),
-
-	s({ trig = ";s", snippetType = "autosnippet" }, {
-		t("\\sigma"),
-	}),
-
-	s({ trig = ";S", snippetType = "autosnippet" }, {
-		t("\\Sigma"),
-	}),
-
-	s({ trig = ";t", snippetType = "autosnippet" }, {
-		t("\\tau"),
-	}),
-
-	s({ trig = ";T", snippetType = "autosnippet" }, {
-		t("\\Tau"),
-	}),
-
-	s({ trig = ";u", snippetType = "autosnippet" }, {
-		t("\\upsilon"),
-	}),
-
-	s({ trig = ";U", snippetType = "autosnippet" }, {
-		t("\\Upsilon"),
-	}),
-
-	s({ trig = ";f", snippetType = "autosnippet" }, {
-		t("\\phi"),
-	}),
-
-	s({ trig = ";F", snippetType = "autosnippet" }, {
-		t("\\Phi"),
-	}),
-
-	s({ trig = ";x", snippetType = "autosnippet" }, {
-		t("\\xi"),
-	}),
-
-	s({ trig = ";X", snippetType = "autosnippet" }, {
-		t("\\Xi"),
-	}),
-
-	s({ trig = ";y", snippetType = "autosnippet" }, {
-		t("\\psi"),
-	}),
-
-	s({ trig = ";Y", snippetType = "autosnippet" }, {
-		t("\\Psi"),
-	}),
-
-	s({ trig = ";o", snippetType = "autosnippet" }, {
-		t("\\omega"),
-	}),
-
-	s({ trig = ";r", snippetType = "autosnippet" }, {
-		t("\\Omega"),
-	}),
+  -- psi / Psi
+  s({ trig = ";y", snippetType = "autosnippet" }, { t("\\psi") }),
+  s({ trig = ";Y", snippetType = "autosnippet" }, { t("\\Psi") }),
 }

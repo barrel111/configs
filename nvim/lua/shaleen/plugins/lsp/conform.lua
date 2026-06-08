@@ -4,7 +4,7 @@ if not setup then
 end
 
 conform.setup({
-  formatter_by_ft = {
+  formatters_by_ft = {
     -- elm = { "elm_format" },
     -- go = { "gofmt" },
     -- haskell = { "ormolu" },
