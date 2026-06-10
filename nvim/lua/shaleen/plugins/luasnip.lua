@@ -6,9 +6,6 @@ end
 -- lazy load local snippets
 require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/shaleen/plugins/luasnip/" })
 
--- lazy load friendly-snippets
-require("luasnip/loaders/from_vscode").lazy_load()
-
 -- luasnip.filetype_extend("qmd", { "tex" })
 
 luasnip.config.set_config({ -- Setting LuaSnip config

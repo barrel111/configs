@@ -1,33 +1,28 @@
 local ls = require("luasnip")
-local i = ls.insert_node
 local s = ls.snippet
+local d = ls.dynamic_node
+local i = ls.insert_node
 
 local fmta = require("luasnip.extras.fmt").fmta
 
-local in_mathzone = require("shaleen.plugins.luasnip.tex.utils").in_mathzone
+local utils = require("shaleen.plugins.luasnip.tex.utils")
 
--- return {
---   s(
---     { trig = "(", snippetType = "autosnippet", dscr = "Expands '(' into '\\left(\\right)'" },
---     fmta("\\left( <> \\right", {
---       i(1),
---     }),
---     { condition = in_mathzone }
---   ),
---
---   s(
---     { trig = "[", snippetType = "autosnippet", dscr = "Expands '[' into '\\left[\\right]'" },
---     fmta("\\left[ <> \\right", {
---       i(1),
---     }),
---     { condition = in_mathzone } -- `condition` option passed in the snippet `opts` table
---   ),
---
---   s(
---     { trig = "\\{", snippetType = "autosnippet", dscr = "Expands '\\{' into '\\left{\\right}'" },
---     fmta("\\left\\{ <> \\right\\", {
---       i(1),
---     }),
---     { condition = in_mathzone } -- `condition` option passed in the snippet `opts` table
---   ),
--- }
+return {
+  s(
+    { trig = "lp", snippetType = "autosnippet", dscr = "\\left( \\right)" },
+    fmta("\\left( <> \\right)", { d(1, utils.get_visual) }),
+    { condition = utils.in_mathzone }
+  ),
+
+  s(
+    { trig = "lb", snippetType = "autosnippet", dscr = "\\left[ \\right]" },
+    fmta("\\left[ <> \\right]", { d(1, utils.get_visual) }),
+    { condition = utils.in_mathzone }
+  ),
+
+  s(
+    { trig = "lc", snippetType = "autosnippet", dscr = "\\left\\{ \\right\\}" },
+    fmta("\\left\\{ <> \\right\\}", { d(1, utils.get_visual) }),
+    { condition = utils.in_mathzone }
+  ),
+}

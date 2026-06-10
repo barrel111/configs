@@ -6,6 +6,9 @@ local MATH_ENVIRONMENTS = {
 	displaymath = true,
 	eqnarray = true,
 	equation = true,
+	["equation*"] = true,
+	align = true,
+	["align*"] = true,
 	math = true,
 	array = true,
 }

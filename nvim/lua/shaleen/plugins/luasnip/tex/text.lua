@@ -30,6 +30,20 @@ return {
   ),
 
   s(
+    { trig = "te", snippetType = "autosnippet", dscr = "Expands 'te' into '\\emph{}'" },
+    fmta("\\emph{<>}", {
+      d(1, utils.get_visual),
+    })
+  ),
+
+  s(
+    { trig = "tsc", snippetType = "autosnippet", dscr = "Expands 'tsc' into '\\textsc{}'" },
+    fmta("\\textsc{<>}", {
+      d(1, utils.get_visual),
+    })
+  ),
+
+  s(
     {
       trig = "([^.])txt",
       snippetType = "autosnippet",

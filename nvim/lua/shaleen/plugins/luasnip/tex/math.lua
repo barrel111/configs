@@ -16,14 +16,19 @@ return {
 			end),
 			i(1),
 			i(2),
-		})
+		}),
+		{ condition = utils.in_mathzone }
 	),
 
 	s(
-		{ trig = "__", snippetType = "autosnippet", dscr = "Expands '__' into '_{}'" },
-		fmta("_{<>}", {
-			i(1),
-		})
-		-- { condition = utils.in_mathzone } -- `condition` option passed in the snippet `opts` table
+		{ trig = "__", snippetType = "autosnippet", wordTrig = false, dscr = "Expands '__' into '_{}'" },
+		fmta("_{<>}", { i(1) }),
+		{ condition = utils.in_mathzone }
+	),
+
+	s(
+		{ trig = "^^", snippetType = "autosnippet", wordTrig = false, dscr = "Expands '^^' into '^{}'" },
+		fmta("^{<>}", { i(1) }),
+		{ condition = utils.in_mathzone }
 	),
 }

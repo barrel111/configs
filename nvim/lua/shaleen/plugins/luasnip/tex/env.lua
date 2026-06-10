@@ -12,7 +12,7 @@ local utils = require("shaleen.plugins.luasnip.tex.utils")
 return {
   s(
     { trig = "mm", snippetType = "autosnippet" },
-    fmta("$ <> $", {
+    fmta("\\( <> \\)", {
       d(1, utils.get_visual),
     })
   ),
@@ -35,6 +35,12 @@ return {
   ),
 
   s(
+    { trig = "dm", snippetType = "autosnippet", dscr = "Expands 'dm' into \\[...\\] display math" },
+    fmta("\\[\n    <>\n\\]", { i(1) }),
+    { condition = line_begin }
+  ),
+
+  s(
     { trig = "eq", snippetType = "autosnippet", dscr = "Expands 'eq' into an equation environment" },
     fmta(
       [[
@@ -42,6 +48,45 @@ return {
           <>
       \end{equation*}
      ]],
+      { i(1) }
+    ),
+    { condition = line_begin }
+  ),
+
+  s(
+    { trig = "pm", snippetType = "autosnippet", dscr = "Expands 'pm' into a pmatrix environment" },
+    fmta(
+      [[
+      \begin{pmatrix}
+          <>
+      \end{pmatrix}
+      ]],
+      { i(1) }
+    ),
+    { condition = line_begin }
+  ),
+
+  s(
+    { trig = "bm", snippetType = "autosnippet", dscr = "Expands 'bm' into a bmatrix environment" },
+    fmta(
+      [[
+      \begin{bmatrix}
+          <>
+      \end{bmatrix}
+      ]],
+      { i(1) }
+    ),
+    { condition = line_begin }
+  ),
+
+  s(
+    { trig = "ca", snippetType = "autosnippet", dscr = "Expands 'ca' into a cases environment" },
+    fmta(
+      [[
+      \begin{cases}
+          <>
+      \end{cases}
+      ]],
       { i(1) }
     ),
     { condition = line_begin }

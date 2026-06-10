@@ -20,8 +20,7 @@ end
 
 -- Detect whether we are in a mathzone
 utils.in_mathzone = function()
-	-- return vim.fn["vimtex#syntax#in_mathzone"]() == 1
-	return mathzone_ts.in_mathzone() or utils.in_env("align*") or utils.in_env("equation*")
+	return mathzone_ts.in_mathzone()
 end
 
 utils.in_text = function()
