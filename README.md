@@ -11,22 +11,25 @@ install dependencies:
 set up oh-my-zsh and symlink zshrc:
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-ln -sf ./.zshrc ~/.zshrc
+ln -sf "$(pwd)/.zshrc" ~/.zshrc
 ```
 
 install the MacTeX distribution manually. set up iterm2 by importing the json profile; under appearance>general set theme:minimal.
 
-currently the following is my setup.
+currently the following is my setup. requires that the corresponding folders don't already exist.
 ```shell
-ln -sf ./aerospace ~/.config/aerospace
-ln -sf ./latex ~/Library/texmf/tex/latex
-ln -sf ./nvim ~/.config/nvim
+ln -sf "$(pwd)/aerospace" ~/.config/aerospace
+ln -sf "$(pwd)/latex" ~/Library/texmf/tex/latex
+ln -sf "$(pwd)/nvim" ~/.config/nvim
 mkdir -p ~/Library/Application\ Support/typst/packages/local
-ln -sf ./typst "~/Library/Application Support/typst/packages/local"
+ln -sf "$(pwd)/typst" ~/Library/Application\ Support/typst/packages/local
+ln -sf "$(pwd)/ghostty" ~/Library/Application\ Support/com.mitchellh.ghostty
 ```
 
 previously i used yabai+skhd to manage windows. 
 ```shell
-ln -sf ./skhd ~/.config/skhd
-ln -sf ./yabai ~/.config/yabai
+ln -sf "$(pwd)/skhd" ~/.config/skhd
+ln -sf "$(pwd)/yabai" ~/.config/yabai
 ```
+
+currently don't use skhd,yabai or iterm2.

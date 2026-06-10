@@ -14,3 +14,6 @@ brew "opam"
 brew "lua-language-server"
 brew "texlab"
 # clangd: xcode-select --install
+
+# treesitter
+brew "tree-sitter-cli"
