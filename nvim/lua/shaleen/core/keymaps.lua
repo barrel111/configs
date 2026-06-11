@@ -70,8 +70,29 @@ keymap.set(
   .. '({paths = "~/.config/nvim/lua/shaleen/plugins/luasnip/"})<CR>'
 )
 
--- vimtex
-keymap.set("n", "<leader>ll", "<cmd>VimtexCompile<cr>")
+-- math: typst + vimtex
+local job_id = nil
+
+vim.keymap.set("n", "<leader>ll", function()
+  if vim.bo.filetype == "typst" then
+    if job_id then
+      vim.fn.jobstop(job_id)
+      job_id = nil
+      vim.notify("Typst: stopped watching", vim.log.levels.INFO)
+    else
+      job_id = vim.fn.jobstart({ vim.fn.expand("~/scripts/typst-preview.sh"), vim.fn.expand("%") })
+      vim.notify("Typst: watching " .. vim.fn.expand("%:t"), vim.log.levels.INFO)
+    end
+  else
+    vim.cmd("VimtexCompile")
+  end
+end)
+
+vim.api.nvim_create_autocmd("VimLeave", {
+  callback = function()
+    if job_id then vim.fn.jobstop(job_id) end
+  end
+})
 
 keymap.set("n", "<leader>tq", function()
   local win = vim.fn.getqflist({ winid = 0 }).winid
