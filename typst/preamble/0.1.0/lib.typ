@@ -2,11 +2,10 @@
 
 
 #let colors = (
-  prop: (bg: rgb("#483D8B").lighten(90%), border: rgb("#4B4B80")), // Space Cadet
+  prop: (bg: rgb("#7567B8").lighten(88%), border: rgb("#483D88")),
   lemma: (bg: rgb("#7F95D1").lighten(85%), border: rgb("#7F95D1")),     // Vista Blue
-  corollary: (bg: rgb("#80475E").lighten(90%), border: rgb("#80475E")),  // Quinacridone Magenta
+  corollary: (bg: rgb("#567F91").lighten(90%), border: rgb("#567F91")),
   definition: (bg: rgb("#FFEBE7").lighten(60%), border: rgb("#CC5A71")), // Misty Rose with Blush border
-  remark: (bg: rgb("#FFEBE7"), border: rgb("#34344A").lighten(50%))      // Misty Rose with lightened Space Cadet
 )
 
 // * project setup.
@@ -16,7 +15,7 @@
   title: "TITLE",
   subtitle: "subtitle",
   authors: ("Shaleen Baral",),
-  authors_label: "Authors:",
+  authors-label: "Authors:",
   body,
   contents: true,
   end: none,
@@ -27,17 +26,12 @@
     number-align: center,
     margin: (top: 0.8in, bottom: 0.8in, x: 0.85in),
   )
-  set text(size: 10pt)
-  // set text(font: "Asana Math")
   set text(font: "EB Garamond", 11pt)
 
-  show link: underline;
+  show link: underline
 
   set enum(indent: 15pt, numbering: "a.")
   set list(indent: 15pt)
-
- // #show math.equation: set text(font: "EB Garamond", 10pt) 
- // #show math.equation: set text(font: "New Computer Modern Math")
 
   // metadata box.
   rect(width: 100%, stroke: (top: 1pt, bottom: 1pt, rest: 0pt))[
@@ -48,7 +42,7 @@
     #align(center)[
       #block(text(weight: 400, 1.15em, subtitle))
     ]
-    #authors_label #authors.join(", ")
+    #authors-label #authors.join(", ")
   ]
 
   // table of contents.
@@ -65,9 +59,11 @@
 
   // heading.
   set heading(numbering: "1.")
-  show heading: it => [
-    #(counter(heading).display() + " " * 3 + it.body)
-  ]
+  show heading: it => {
+    let size = (1.2em, 1.05em, 1em).at(calc.min(it.level - 1, 2))
+    block(text(size: size, weight: "bold",
+      counter(heading).display() + h(0.5em) + it.body))
+  }
 
   // qed should be square with black outline and
   // no fill.
@@ -80,7 +76,7 @@
 
   // end content (optional).
   // usually for something like a bibliography
-  if type(end) == content {
+  if end != none {
     show heading: it => it.body
     pagebreak()
     end
@@ -88,23 +84,22 @@
 }
 
 // * quality of life
-#let numbered_eq(content) = math.equation(block: true, numbering: "(1)", content)
+#let numbered_eq(body) = math.equation(block: true, numbering: "(1)", body)
 
 // examples and remarks are not numbered.
 #let example = thmplain("example", "Example", inset: 0em).with(numbering: none)
 #let remark = thmplain("remark", "Remark", inset: 0em).with(numbering: none)
 
 // * theorem environments.
-#let prop = thmbox("proposition", "Proposition", fill: colors.prop.bg, radius: 0em, inset: (x: 0.5em, y: 0.65em), stroke: (left: colors.prop.border + 2.5pt))//, stroke: (bottom: 0.25pt, top: 0.65pt))
-#let lemma = thmbox("lemma", "Lemma", fill: colors.lemma.bg, radius: 0em, inset: (x: 0.5em, y: 0.65em), stroke:(left: colors.lemma.border +  2.5pt)) //, stroke: (bottom: 0.25pt, top: 0.65pt))
-#let corollary = thmbox("corollary", "Corollary", base: "proposition", fill: colors.corollary.bg, radius: 0em, inset: (x: 0.5em, y: 0.65em), stroke:(left: colors.corollary.border + 2.5pt))// , stroke: (bottom: 0.25pt, top: 0.65pt))
-#let definition = thmbox("definition", "Definition", fill: colors.definition.bg, radius: 0em, stroke:(left: colors.definition.border + 2.5pt), inset: (x: 0.5em, y: 0.65em), padding: (top: 0em, bottom: 0em))
+#let _thmbox-defaults = (radius: 0em, inset: (x: 0.5em, y: 0.65em))
 
-// proofs are attached to theorems, although they are not numbered.
-// qed should always be in a new line
-#let proof = thmproof("proof", "Proof", base: "theorem", inset: (x: 0.5em, y: 0em), bodyfmt: body => [
-  #body #h(1fr) $square$
-])
+#let prop       = thmbox("proposition", "Proposition", .._thmbox-defaults, fill: colors.prop.bg, stroke: (left: colors.prop.border + 2.5pt))
+#let lemma      = thmbox("lemma", "Lemma", .._thmbox-defaults, fill: colors.lemma.bg, stroke: (left: colors.lemma.border + 2.5pt))
+#let corollary  = thmbox("corollary", "Corollary", base: "proposition", .._thmbox-defaults, fill: colors.corollary.bg, stroke: (left: colors.corollary.border + 2.5pt))
+#let definition = thmbox("definition", "Definition", .._thmbox-defaults, fill: colors.definition.bg, stroke: (left: colors.definition.border + 2.5pt), padding: (top: 0em, bottom: 0em))
+
+// proofs are attached to propositions, although they are not numbered.
+#let proof = thmproof("proof", "Proof", base: "proposition", inset: (x: 0.5em, y: 0em), bodyfmt: body => [#body \ #h(1fr) $square$])
 
 // * math conveniences.
 #let to = $->$
@@ -115,31 +110,35 @@
 #let conv(it) = $"conv"({#it})$
 #let cone(it) = $"cone"({#it})$
 
-#let id = "id"
-#let OPT = `OPT`
-#let ALG = `ALG`
+#let id  = $"id"$
+#let OPT = $"OPT"$
+#let ALG = $"ALG"$
 
 #let Hom = (c, a, b) => $"Hom"_(sans(#c))(#a, #b)$
-#let Obj = $"Obj"$
-
-// * aesthetics.
-#set enum(indent: 15pt, numbering: "a.")
+#let Obj = (c) => $"Obj"(sans(#c))$
 
 // * problem set.
+#let pset-setup(body) = {
+  set enum(indent: 15pt, numbering: "a.")
+  set list(indent: 15pt)
+  show: thmrules.with(qed-symbol: $square$)
+  body
+}
+
 #let p = counter("problem")
 #let problem(it) = block[
   #p.step()
   #text(size: 12pt)[*Problem #context p.display().* (#it)] 
 ]
 
-#let mm(it) = block[\ #box(width: 100%)[#it]]
+#let math-fw(body) = block[\ #box(width: 100%)[#body]]
 
-#let highlight(content, color: rgb("#FEF2A0").lighten(0%)) = {
+#let highlight(body, color: rgb("#FEF2A0")) = {
   box(
     fill: color,
     inset: (x: 0.1em, y: 0em),
     outset: (y: 0.15em),
     radius: 0.12em,
-    content
+    body
   )
 }
