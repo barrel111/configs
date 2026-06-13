@@ -1,19 +1,39 @@
+tap "nikitabobko/tap"
+
 # fonts
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
 
 # apps
-cask "aerospace"
+cask "nikitabobko/tap/aerospace"
+cask "bluesnooze"
+cask "claude-code"
+cask "finetune"
 cask "ghostty"
+cask "notunes"
+cask "quicklook-video"
 cask "sioyek"
+
+# editors / shell
 brew "neovim"
-brew "typst"
-brew "opam"
+brew "git"
+brew "git-filter-repo"
+brew "ripgrep"
+brew "fd"
+brew "cloc"
 
 # lsp servers
 brew "lua-language-server"
 brew "texlab"
+brew "tinymist"
 # clangd: xcode-select --install
 
 # treesitter
+brew "tree-sitter"
 brew "tree-sitter-cli"
+
+# typst
+brew "typst"
+
+# languages / runtimes
+brew "opam"

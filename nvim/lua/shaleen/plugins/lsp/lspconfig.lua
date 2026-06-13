@@ -39,7 +39,7 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-vim.lsp.enable({ "clangd", "texlab", "ocamllsp", "lua_ls" })
+vim.lsp.enable({ "clangd", "texlab", "ocamllsp", "lua_ls", "tinymist" })
 
 vim.lsp.config("lua_ls", {
   settings = {
