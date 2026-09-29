@@ -6,6 +6,7 @@
   lemma: (bg: rgb("#7F95D1").lighten(85%), border: rgb("#7F95D1")),
   corollary: (bg: rgb("#567F91").lighten(90%), border: rgb("#567F91")),
   definition: (bg: rgb("#FFEBE7").lighten(60%), border: rgb("#CC5A71")),
+  solution: (bg: rgb("#3B6FE0").lighten(85%), border: rgb("#3B6FE0").darken(15%), text: rgb("#3B6FE0").darken(25%)),
 )
 
 /// Full document template with metadata header, table of contents, and styled headings.
@@ -187,6 +188,18 @@
 #let corollary = make-thm("corollary", "Corollary", colors.corollary, base: "proposition")
 /// Numbered definition environment. Resets at each level-2 heading.
 #let definition = make-thm("definition", "Definition", colors.definition, padding: (top: 0em, bottom: 0em))
+/// Unnumbered solution environment: a plain, colored "Solution." label (set
+/// slightly larger than body text) with no box; the body is set in a darker
+/// shade of the same color, for readable contrast against white.
+#let solution = thmplain(
+  "solution",
+  "Solution",
+  inset: 0em,
+  separator: [.#h(0.2em)],
+  titlefmt: title => text(fill: colors.solution.border, size: 1.15em, weight: "bold", title),
+  bodyfmt: body => text(fill: colors.solution.text, body),
+).with(numbering: none)
+
 /// Unnumbered example environment.
 #let example = thmplain("example", "Example", inset: 0em, separator: [.#h(0.2em)]).with(numbering: none)
 /// Unnumbered remark environment.
@@ -234,7 +247,8 @@
   }
 }
 
-/// A problem block with a bold header and indented body.
+/// A problem block rendered as a bordered box whose top edge is interrupted
+/// by the bold header, e.g. `Problem 3. Title. ----------------`.
 ///
 /// Numbering is automatic and persistent across the document. Providing a
 /// numeric label like `"3"` or `"3.1"` resets the counter to that value and
@@ -243,9 +257,10 @@
 /// without affecting the counter.
 ///
 /// - label (str): Optional label. Numeric labels reset the counter; arbitrary labels display verbatim.
-/// - title (content): Optional title shown in parentheses after the problem number.
-/// - body (content): Problem content, rendered with a slight left indent.
-#let problem(label: none, title: none, body) = {
+/// - title (content): Optional title shown after the problem number, as "Problem N. Title."
+/// - boxed (bool): Whether to draw the bordered box (default: `true`). When `false`, renders as a plain bold header with an indented body.
+/// - body (content): Problem content, rendered inside the box.
+#let problem(label: none, title: none, boxed: true, body) = {
   if label != none {
     let parsed = _parse-prob-label(label)
     if parsed != none { _prob-state.update(parsed) }
@@ -262,13 +277,50 @@
       if min == none { str(maj) } else { str(maj) + "." + str(min) }
     }
     let header = if title != none {
-      text(size: 13pt, strong[Problem #num (#title).])
+      [Problem #num. #title.]
     } else {
-      text(size: 13pt, strong[Problem #num.])
+      [Problem #num.]
     }
-    block[#header]
-    pad(left: 1em, body)
-    v(1em)
+    let header-text = text(size: 13pt, weight: "bold", header)
+
+    if not boxed {
+      block(above: 1.2em, below: 0.6em)[#header-text]
+      pad(left: 1em, body)
+      v(1em, weak: true)
+    } else {
+      layout(size => {
+        // the title tag is measured so the box's top inset and the gap
+        // before it can grow to fit titles that wrap onto multiple lines;
+        // titles that fit on one line get a shrink-to-fit tag instead of a
+        // full-width one, so the border resumes right after the text.
+        let avail-width = size.width - 2.4 * 13pt
+        let natural = measure(header-text)
+        let title-box = if natural.width <= avail-width {
+          box(fill: white, inset: (x: 0.35em, y: 0.15em), header-text)
+        } else {
+          box(width: avail-width, fill: white, inset: (x: 0.35em, y: 0.15em), header-text)
+        }
+        let dims = measure(title-box)
+        let gap-below = 0.55em
+        let top-inset = dims.height / 2 + gap-below
+        let dy = -(dims.height + gap-below)
+
+        [
+          #v(0.85em + dims.height / 2)
+          #block(
+            width: 100%,
+            stroke: 0.6pt + black,
+            radius: 2pt,
+            inset: (top: top-inset, bottom: 0.9em, x: 1em),
+            breakable: true,
+          )[
+            #place(top + left, dx: 0.6em, dy: dy)[#title-box]
+            #body
+          ]
+          #v(0.6em)
+        ]
+      })
+    }
   }
 }
 
