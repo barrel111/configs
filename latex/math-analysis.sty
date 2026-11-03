@@ -1,31 +1,25 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{math-analysis}[2025/05/24 v1.0 Linear and functional analysis notation]
+\ProvidesPackage{math-analysis}[analysis notation]
 
-% Note: \dim, \ker, \det are provided by amsmath
+\RequirePackage{math-core,amsmath,mathtools,xparse}
+
+% note: \dim, \ker, \det are provided by amsmath
 \DeclareMathOperator{\Rk}{rk}
 \DeclareMathOperator{\tr}{tr}
 \DeclareMathOperator{\Id}{Id}
 \DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\proj}{proj}
+\DeclareMathOperator{\supp}{supp}
 
-% Inner product: \inner{u}{v} fixed, \inner*{u}{v} auto-scaled, \inner{u}{v}[H] subscripted
-\DeclarePairedDelimiterX{\inner@delim}[2]{\langle}{\rangle}{#1,\,#2}
-\NewDocumentCommand{\inner}{s m m o}{%
-  \IfBooleanTF{#1}{\inner@delim*{#2}{#3}}{\inner@delim{#2}{#3}}%
-  \IfValueT{#4}{_{#4}}%
-}
+% Fixed: \inner{u}{v}; auto-scaled: \inner*{u}{v}; explicit: \inner[\Big]{u}{v}.
+% Append ordinary subscripts: \inner{u}{v}_{H}.
+\DeclarePairedDelimiterX{\inner}[2]{\langle}{\rangle}{#1,\,#2}
 
-% \normp{x}{p} fixed size, \normp*{x}{p} auto-scaled
-\NewDocumentCommand{\normp}{smm}{
-  \IfBooleanTF{#1}
-    {\norm*{#2}_{#3}}
-    {\norm{#2}_{#3}}
-}
+% Subscripted norms use \norm{x}_{p}, \norm*{x}_{p}, or \norm[\Big]{x}_{p}.
 
-% L^p space: \Lp{p} or \Lp{p}[\Omega]
-\NewDocumentCommand{\Lp}{m o}{
-  \IfNoValueTF{#2}
-    {L^{#1}}
-    {L^{#1}\!\parens*{#2}}
-}
+% L^p space; append a domain explicitly: \Lp{p}\!\parens*{\Omega}.
+\NewDocumentCommand{\Lp}{m}{L^{#1}}
 
 \endinput

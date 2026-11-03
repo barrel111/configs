@@ -1,0 +1,126 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{preamble-pset}[problem set]
+
+% load through \usepackage[pset]{preamble}
+\newif\ifpset@showproblem
+\pset@showproblemtrue
+\DeclareOption{hideproblemtext}{\pset@showproblemfalse}
+\ProcessOptions\relax
+
+\RequirePackage{marginnote}
+\RequirePackage{xcolor}
+\RequirePackage{pdfrender}
+\colorlet{psetnotecolor}{black!60}
+\newif\ifpset@active
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% problem environment
+\newcounter{problem}[section]
+\renewcommand{\theproblem}{\arabic{problem}}
+
+% switch problem statements on/off
+\newcommand{\showproblem}{\pset@showproblemtrue}
+\newcommand{\hideproblem}{\pset@showproblemfalse}
+
+% inset bodies; headings stay at the outer margin. problems use flush-left
+% paragraphs, while solutions restore the surrounding paragraph indentation.
+\newcommand{\pset@statementlayout}{%
+  \setlength{\leftmargin}{0.75em}%
+  \setlength{\rightmargin}{0pt}%
+  \setlength{\labelwidth}{0pt}%
+  \setlength{\itemindent}{-\leftmargin}%
+  \setlength{\listparindent}{0pt}%
+  \setlength{\parsep}{0.25\baselineskip}%
+  \setlength{\topsep}{0.5\baselineskip}%
+  \setlength{\partopsep}{0pt}%
+}
+
+% capture the body so hidden material is not executed or allotted space.
+% labels/side effects in a hidden body are skipped too. captured bodies support
+% paragraphs and nested environments, but not verbatim material.
+\NewDocumentEnvironment{problem}{o +b}
+{
+  \pset@activetrue
+  \list{}{\pset@statementlayout}
+\item\relax
+  \refstepcounter{problem}
+  \large\textbf{Problem~\theproblem.}%
+  \IfValueT{#1}{\textbf{ (#1)}}%
+  \ifpset@showproblem
+  \expandafter\@firstofone
+  \else
+  \expandafter\@gobble
+  \fi{%
+    \par\nobreak\vspace{-\parskip}\normalsize\mdseries\unboldmath\color{black}
+    \pdfrender{TextRenderingMode=FillStroke,LineWidth=0.08pt}%
+    \ignorespaces#2%
+  }%
+}
+{
+  \endlist\@endpefalse
+}
+
+% a solution is an unnumbered text container, not a proof. lemmas and
+% their proofs may appear inside; only those proofs receive QED boxes.
+% use \begin{solution}[Solution to (a)] for a custom heading.
+\NewDocumentEnvironment{solution}{O{Solution}}
+{
+  \pset@activetrue
+  \par\normalfont
+  \edef\pset@solutionindent{\the\parindent}%
+  % indent paragraphs within list items without changing list margins or labels.
+  % keep this local to solution, including nested enumerate environments.
+  % append to existing user defaults. with enumitem's shortlabels option,
+  % appending to an undefined key list creates an empty label, so initialize
+  % only when no enumerate defaults exist yet.
+  \@ifundefined{enit@@enum}
+  {\setlist[enumerate]{listparindent=\pset@solutionindent}}%
+  {\ifx\enit@@enum\@empty
+    \setlist[enumerate]{listparindent=\pset@solutionindent}%
+    \else
+    \setlist*[enumerate]{listparindent=\pset@solutionindent}%
+  \fi}%
+  \list{}{%
+    \pset@statementlayout
+    \setlength{\listparindent}{\parindent}%
+  }
+\item\relax
+  \textbf{#1\@addpunct{.}}%
+  % let text start its own indented paragraph; forcing \indent here creates
+  % an empty paragraph when the solution starts with a list or display.
+  \par\nobreak\vspace{-\parskip}\ignorespaces
+}
+{
+  \endlist\@endpefalse
+}
+
+\newcommand{\theorembyproblem}{%
+  \counterwithout{theorem}{section}%
+  \counterwithin{theorem}{problem}%
+}
+
+% notes fit within the existing one-inch page margin. the body inset supplies
+% additional breathing room without changing the page geometry.
+\newlength{\psetnotewidth}
+\setlength{\psetnotewidth}{0.7in}
+\newlength{\psetnotesep}
+\setlength{\psetnotesep}{0.12in}
+
+\NewDocumentCommand{\psetnote}{O{0pt} m}{%
+  \ifpset@active
+  \begingroup
+  \reversemarginpar
+  \setlength{\marginparwidth}{\psetnotewidth}%
+  \setlength{\marginparsep}{\psetnotesep}%
+  \renewcommand*{\raggedleftmarginnote}{\raggedright}
+  \renewcommand{\marginfont}{\normalfont\unboldmath\footnotesize\color{psetnotecolor}}%
+  \marginnote{#2}[#1]%
+  \endgroup
+  \else
+  \PackageError{preamble-pset}{\string\psetnote\space outside problem
+  or solution}%
+  {Place the note beside text inside a problem or solution environment.}%
+  \fi
+}
+
+\endinput

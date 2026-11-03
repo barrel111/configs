@@ -4,7 +4,7 @@ if not luasnip_status then
 end
 
 -- lazy load local snippets
-require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/shaleen/plugins/luasnip/" })
+require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/lua/barrel/plugins/luasnip/" })
 
 -- luasnip.filetype_extend("qmd", { "tex" })
 

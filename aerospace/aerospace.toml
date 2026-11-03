@@ -171,9 +171,6 @@ alt-shift-l = ['join-with right', 'mode main']
 if.app-id = 'com.googlecode.iterm2'
 run = 'move-node-to-workspace C' 
 
-[[on-window-detected]]
-if.app-id = 'info.sioyek.sioyek'
-run = 'move-node-to-workspace P'
 
 [[on-window-detected]]
 if.app-id="com.mitchellh.ghostty"
@@ -182,6 +179,7 @@ run= [
   "move-node-to-workspace C"
 ]
 
+# B- browsers
 # [[on-window-detected]]
 # if.app-id = 'com.google.Chrome'
 # run = 'move-node-to-workspace C' # mnemonics C - chrome
@@ -198,26 +196,43 @@ run = 'move-node-to-workspace B'
 if.app-id = 'app.zen-browser.zen' 
 run = 'move-node-to-workspace B' 
 
+# D - discord
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
-run = 'move-node-to-workspace D' # mnemonics D - discord
+run = 'move-node-to-workspace D' 
 
+# M - music
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
-run = 'move-node-to-workspace M' #mnemonics M - music
+run = 'move-node-to-workspace M' 
 
+[[on-window-detected]]
+if.app-id = 'rocks.spotifast.Spotifast'
+run = 'move-node-to-workspace M' 
+
+# P - documents
 [[on-window-detected]]
 if.app-id = 'com.apple.Preview'
-run = "move-node-to-workspace P" #mnemonics P - non-authored documents
+run = "move-node-to-workspace P"
 
 [[on-window-detected]]
-if.app-id = 'net.sourceforge.skim-app.skim'
-run = "move-node-to-workspace P" #mnemonics P - non-authored documents
+if.app-id = 'info.sioyek.sioyek'
+run = 'move-node-to-workspace P'
 
+# [[on-window-detected]]
+# if.app-id = 'net.sourceforge.skim-app.skim'
+# run = "move-node-to-workspace P" 
+
+# S - slack
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = "move-node-to-workspace S" #mnemonics S - slack
+run = "move-node-to-workspace S" 
 
+# exceptions
 [[on-window-detected]]
 if.app-id = 'com.valvesoftware.steam.helper'
 run = 'layout tiling'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Stickies'
+run = 'layout floating'

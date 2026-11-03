@@ -7,18 +7,28 @@ local fmta = require("luasnip.extras.fmt").fmta
 local rep = require("luasnip.extras").rep
 
 local line_begin = require("luasnip.extras.expand_conditions").line_begin
-local utils = require("shaleen.plugins.luasnip.tex.utils")
+local utils = require("barrel.plugins.luasnip.tex.utils")
+
+-- Deliberate prefixes prevent words such as "also", "case", and "equation"
+-- from expanding before they have been typed. Matrices/cases require math.
+local function text_line(line, trigger)
+  return line_begin(line, trigger) and utils.in_textzone()
+end
+local function math_line(line, trigger)
+  return line_begin(line, trigger) and utils.in_mathzone()
+end
 
 return {
   s(
     { trig = "mm", snippetType = "autosnippet" },
     fmta("\\( <> \\)", {
       d(1, utils.get_visual),
-    })
+    }),
+    { condition = utils.in_textzone }
   ),
 
   s(
-    { trig = "env", snippetType = "autosnippet" },
+    { trig = ";env", snippetType = "autosnippet" },
     fmta(
       [[
       \begin{<>}
@@ -31,17 +41,17 @@ return {
         rep(1), -- this node repeats insert node i(1)
       }
     ),
-    { condition = line_begin }
+    { condition = text_line }
   ),
 
   s(
-    { trig = "dm", snippetType = "autosnippet", dscr = "Expands 'dm' into \\[...\\] display math" },
+    { trig = ";dm", snippetType = "autosnippet", dscr = "Expands ';dm' into \\[...\\] display math" },
     fmta("\\[\n    <>\n\\]", { i(1) }),
-    { condition = line_begin }
+    { condition = text_line }
   ),
 
   s(
-    { trig = "eq", snippetType = "autosnippet", dscr = "Expands 'eq' into an equation environment" },
+    { trig = ";eq", snippetType = "autosnippet", dscr = "Expands ';eq' into an equation environment" },
     fmta(
       [[
       \begin{equation*}
@@ -50,7 +60,7 @@ return {
      ]],
       { i(1) }
     ),
-    { condition = line_begin }
+    { condition = text_line }
   ),
 
   s(
@@ -63,7 +73,7 @@ return {
       ]],
       { i(1) }
     ),
-    { condition = line_begin }
+    { condition = math_line }
   ),
 
   s(
@@ -76,7 +86,7 @@ return {
       ]],
       { i(1) }
     ),
-    { condition = line_begin }
+    { condition = math_line }
   ),
 
   s(
@@ -89,11 +99,11 @@ return {
       ]],
       { i(1) }
     ),
-    { condition = line_begin }
+    { condition = math_line }
   ),
 
   s(
-    { trig = "al", snippetType = "autosnippet", dscr = "Expands 'al' into an align environment" },
+    { trig = ";ali", snippetType = "autosnippet", dscr = "Expands ';ali' into an align environment" },
     fmta(
       [[
       \begin{align*}
@@ -102,6 +112,6 @@ return {
       ]],
       { i(1) }
     ),
-    { condition = line_begin }
+    { condition = text_line }
   ),
 }

@@ -15,3 +15,5 @@ keybind = ctrl+q>j=new_split:down
 keybind = ctrl+q>k=new_split:up
 keybind = ctrl+q>l=new_split:right
 keybind = ctrl+q>f=toggle_split_zoom
+
+keybind = ctrl+o=toggle_background_opacity

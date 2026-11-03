@@ -7,7 +7,6 @@ cask "font-jetbrains-mono-nerd-font"
 # apps
 cask "nikitabobko/tap/aerospace"
 cask "bluesnooze"
-cask "claude-code"
 cask "finetune"
 cask "ghostty"
 cask "notunes"
@@ -28,12 +27,16 @@ brew "texlab"
 brew "tinymist"
 # clangd: xcode-select --install
 
+# formatters
+brew "tex-fmt"
+
 # treesitter
 brew "tree-sitter"
 brew "tree-sitter-cli"
 
 # typst
 brew "typst"
+brew "typstyle"
 
 # languages / runtimes
 brew "opam"

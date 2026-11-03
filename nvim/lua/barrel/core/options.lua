@@ -15,6 +15,7 @@ opt.autoindent = true
 -- line wrapping should be true
 opt.wrap = true
 opt.lbr = true
+require("barrel.core.screen-lines").setup()
 
 -- case insensitive search for lcase
 -- case sensitive search for ucase
@@ -44,13 +45,22 @@ opt.iskeyword:append("-")
 
 -- latex setup
 vim.g.tex_flavor = "latex"
+-- The custom optimization environment contains math without explicit delimiters.
+vim.g.vimtex_syntax_custom_envs = { { name = "lp", math = true } }
 vim.g.vimtex_view_method = "general"
 vim.g.vimtex_view_general_viewer = vim.fn.expand("~/scripts/sioyek-synctex.sh")
+
+-- clean aux files when leaving a tex buffer
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VimtexEventQuit",
+  callback = function()
+    vim.call("vimtex#compiler#clean", 0)
+  end,
+})
 
 -- suppress dumb quickfix & warnings
 vim.g.vimtex_quickfix_ignore_filters = {
   "Underfull",
   "Overfull",
-  "Empty bibliography",
-  "Missing"
+  "Empty bibliography"
 }

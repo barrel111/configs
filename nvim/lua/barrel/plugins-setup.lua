@@ -27,7 +27,7 @@ require("lazy").setup({
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("shaleen.plugins.nvim-tree")
+      require("barrel.plugins.nvim-tree")
     end,
   },
 
@@ -65,10 +65,8 @@ require("lazy").setup({
   -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    build = function()
-      local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
-      ts_update()
-    end,
+    lazy = false,
+    build = ":TSUpdate",
   },
 
   -- brackets
@@ -79,6 +77,27 @@ require("lazy").setup({
 
   -- vimtex
   "lervag/vimtex",
+
+  -- texpresso
+  {
+    "let-def/texpresso.vim",
+    config = function()
+      local texpresso = require("texpresso")
+      local launch = texpresso.launch
+      texpresso.launch = function(args)
+        -- TeXpresso reads ls-R indexes; GUI sessions may not inherit .zshrc.
+        local texmf = vim.fn.expand("~/Library/texmf")
+        local databases = vim.env.TEXMFDBS or ""
+        if vim.fn.filereadable(texmf .. "/ls-R") == 1
+          and not vim.tbl_contains(vim.split(databases, ":", { plain = true }), texmf) then
+          vim.env.TEXMFDBS = texmf .. ":" .. databases
+        end
+        launch(args)
+        -- Resolve references with additional passes when editing is idle.
+        texpresso.send("rerun", true)
+      end
+    end,
+  },
 
   -- typst
   {
@@ -100,4 +119,5 @@ require("lazy").setup({
   },
 
   "jmbuhr/cmp-pandoc-references",
+  "tris203/precognition.nvim",
 }, { rocks = { enabled = false } })

@@ -19,6 +19,11 @@ keymap.set("n", "<leader>hh", ":nohl<CR>")
 keymap.set("n", "j", "gj")
 keymap.set("n", "k", "gk")
 
+keymap.set("n", "<leader>n", function()
+  vim.wo.number = true
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end, { desc = "Toggle relative/absolute line numbers" })
+
 keymap.set("n", "<leader>bb", "<C-^>")
 keymap.set("n", "<leader>+", "<C-a>")
 keymap.set("n", "<leader>-", "<C-x>")
@@ -63,12 +68,29 @@ keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>")
 keymap.set("n", "<leader>fz", "<cmd>Telescope zotero<cr>")
 
 -- refresh snippets
-keymap.set(
-  "n",
-  "<leader>L",
-  '<cmd>lua require("luasnip.loaders.from_lua").load'
-  .. '({paths = "~/.config/nvim/lua/shaleen/plugins/luasnip/"})<CR>'
-)
+-- keymap.set(
+--   "n",
+--   "<leader>L",
+--   '<cmd>lua require("luasnip.loaders.from_lua").load'
+--   .. '({paths = "~/.config/nvim/lua/barrel/plugins/luasnip/"})<CR>'
+-- )
+
+-- TeXpresso live preview (Space l t).
+keymap.set("n", "<leader>lt", function()
+  if vim.bo.filetype ~= "tex" then return end
+  local texpresso = require("texpresso")
+  if texpresso.is_running() then
+    texpresso.synctex_forward()
+    return
+  end
+  local root = (vim.b.vimtex or {}).tex or vim.api.nvim_buf_get_name(0)
+  if root == "" then
+    vim.notify("TeXpresso: name the buffer before launching", vim.log.levels.WARN)
+    return
+  end
+  texpresso.launch({ root })
+  texpresso.reload(0)
+end, { desc = "TeXpresso: launch or jump to cursor" })
 
 -- math: typst + vimtex
 local job_id = nil
@@ -76,11 +98,27 @@ local job_id = nil
 vim.keymap.set("n", "<leader>ll", function()
   if vim.bo.filetype == "typst" then
     if job_id then
-      vim.fn.jobstop(job_id)
+      local stopped_job = job_id
       job_id = nil
+      vim.fn.jobstop(stopped_job)
       vim.notify("Typst: stopped watching", vim.log.levels.INFO)
     else
-      job_id = vim.fn.jobstart({ vim.fn.expand("~/scripts/typst-preview.sh"), vim.fn.expand("%") })
+      local ok, started_job = pcall(vim.fn.jobstart,
+        { vim.fn.expand("~/scripts/typst-preview.sh"), vim.fn.expand("%") }, {
+          on_exit = function(exited_job, exit_code)
+            -- A stopped job may exit after a new preview has already started.
+            if job_id ~= exited_job then return end
+            job_id = nil
+            if exit_code ~= 0 then
+              vim.notify("Typst: preview exited with code " .. exit_code, vim.log.levels.ERROR)
+            end
+          end,
+        })
+      if not ok or started_job <= 0 then
+        vim.notify("Typst: failed to start preview (" .. tostring(started_job) .. ")", vim.log.levels.ERROR)
+        return
+      end
+      job_id = started_job
       vim.notify("Typst: watching " .. vim.fn.expand("%:t"), vim.log.levels.INFO)
     end
   else
@@ -90,7 +128,11 @@ end)
 
 vim.api.nvim_create_autocmd("VimLeave", {
   callback = function()
-    if job_id then vim.fn.jobstop(job_id) end
+    if job_id then
+      local stopped_job = job_id
+      job_id = nil
+      vim.fn.jobstop(stopped_job)
+    end
   end
 })
 
@@ -106,6 +148,7 @@ end, { desc = "Toggle quickfix" })
 local ALL_WARNING_PATTERNS = {
   ".*Warning.*",
 }
+local saved_warning_filters = vim.deepcopy(vim.g.vimtex_quickfix_ignore_filters or {})
 
 keymap.set("n", "<leader>tw", function()
   -- If filters are active, restore; otherwise apply the hide-all-warnings filter
@@ -113,12 +156,13 @@ keymap.set("n", "<leader>tw", function()
 
   if currently_hidden then
     -- Turn warnings back ON
-    vim.g.vimtex_quickfix_ignore_filters = {}
+    vim.g.vimtex_quickfix_ignore_filters = saved_warning_filters
     vim.g._hide_all_tex_warnings = false
     print("VimTeX warnings: ON")
   else
     -- Turn warnings OFF (hide them all)
-    vim.g.vimtex_quickfix_ignore_filters = ALL_WARNING_PATTERNS
+    saved_warning_filters = vim.deepcopy(vim.g.vimtex_quickfix_ignore_filters or {})
+    vim.g.vimtex_quickfix_ignore_filters = vim.list_extend(vim.deepcopy(saved_warning_filters), ALL_WARNING_PATTERNS)
     vim.g._hide_all_tex_warnings = true
     print("VimTeX warnings: OFF")
   end

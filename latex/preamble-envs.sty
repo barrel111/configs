@@ -1,0 +1,36 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{preamble-envs}[2026/10/26 Custom LaTeX environments]
+
+% Loaded by preamble's opt option, or directly when these environments are needed.
+% Keep environment helpers here; this file is outside the web notation inputs.
+\RequirePackage{amsmath,xparse}
+
+% \begin{lp}[tag]{operator}{objective} ... \end{lp}
+% The objective is required; use {\cdots} for a placeholder.
+% ex:
+% \begin{lp}[\mathrm{P}]{\min_{x}}{c^\top x}
+%   \label{lp:primal}
+%   \lpconstraint[i=1,\ldots,m]{a_i^\top x \ge b_i}
+%   \lpconstraint{x \ge 0}
+% \end{lp}
+\NewDocumentEnvironment{lp}{o m m}
+{%
+  \begin{equation}
+    \IfValueT{#1}{\tag{\ensuremath{#1}}}
+    \begin{alignedat}{2}
+      #2\quad & #3 &&\\
+      \text{subject to}\quad
+    }
+    {%
+    \end{alignedat}
+  \end{equation}
+}
+
+% \lpconstraint[qualifier]{constraint}; each row ends with a comma.
+\NewDocumentCommand{\lpconstraint}{O{} m}
+{ & #2, &\quad& #1 \\ }
+
+% For side-by-side programs, place each lp in an explicit minipage.
+% See MIGRATIONS.txt for the former lppair layout.
+
+\endinput

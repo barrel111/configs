@@ -1,132 +1,131 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{preamble}[2025/05/24 v2.0 Custom mathematical preamble]
+\ProvidesPackage{preamble}[2026/10/26 v2.3 Custom mathematical preamble]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Options
+% options
+% analysis/prob/complexity/opt load notation modules.
+% pset loads problem/solution, margin notes, and problem-based theorem numbering.
+% hideproblemtext enables pset but prints only problem headings, not their bodies.
+% Without pset, theorems use section-based numbering.
+% coverpage places the title on a separate page.
 \newif\ifcoverpage
 \newif\ifpreamble@analysis
 \newif\ifpreamble@prob
 \newif\ifpreamble@complexity
-\newif\ifpreamble@thmbyprob
+\newif\ifpreamble@opt
+\newif\ifpreamble@pset
 
 \DeclareOption{coverpage}{\coverpagetrue}
 \DeclareOption{analysis}{\preamble@analysistrue}
 \DeclareOption{prob}{\preamble@probtrue}
 \DeclareOption{complexity}{\preamble@complexitytrue}
-\DeclareOption{thmbyprob}{\preamble@thmbyprobtrue}
+\DeclareOption{opt}{\preamble@opttrue}
+\DeclareOption{pset}{\preamble@psettrue}
+\DeclareOption{hideproblemtext}{%
+  \preamble@psettrue
+  \PassOptionsToPackage{hideproblemtext}{preamble-pset}%
+}
 \ProcessOptions\relax
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Core packages
+% core packages
 \RequirePackage{fix-cm}
-% \RequirePackage[utf8]{inputenc}
 \RequirePackage[margin=1in]{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{xparse}
 
-% Mathematics packages
+% mathematics packages
 \RequirePackage{amsmath,amssymb,amsthm,mathtools}
 \RequirePackage{bm}
-\RequirePackage{dsfont}
-% \RequirePackage{mathrsfs}
 
-% List and enumeration packages
+% list and enumeration packages
 \RequirePackage[shortlabels]{enumitem}
 
-% Algorithm packages
+% algorithm packages
 \RequirePackage{algorithm}
-\RequirePackage{algpseudocode}
+\RequirePackage[indLines=true,noEnd=true,commentColor=black!60]{algpseudocodex}
+\algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
+\algrenewcommand{\algorithmicensure}{\textbf{Output:}}
 
-% Layout and formatting
+% layout and formatting
 \RequirePackage{multicol}
 \RequirePackage{marvosym}
 
-% Fonts
+% fonts
 \RequirePackage{newpxtext}
 \RequirePackage{newpxmath}
-% \RequirePackage{kpfonts}
-% \RequirePackage{libertine}
-% \RequirePackage[T1]{fontenc}
-% \RequirePackage[libertine]{newtxmath}
-% \RequirePackage[scale=1]{sourcecodepro}
-% \RequirePackage{minted}
-% \AtBeginDocument{
-%   \setminted{style=gruvbox-light, fontsize=\small}
-% }
 
 \RequirePackage{hyperref}
 \hypersetup{
-    colorlinks=true,
-    linkcolor=cyan,
-    filecolor=red,
-    urlcolor=blue,
+  colorlinks=true,
+  linkcolor=cyan,
+  filecolor=red,
+  urlcolor=blue,
 }
 
-\providecommand{\symbf}{\boldsymbol}
-
+% named references: load after hyperref/amsthm, before theorem definitions.
+% use \cref{label} in prose and \Cref{label} at the start of a sentence.
+\RequirePackage[noabbrev,nameinlink]{cleveref}
+\crefname{notation}{notation}{notations}
+\Crefname{notation}{Notation}{Notations}
+\crefname{problem}{problem}{problems}
+\Crefname{problem}{Problem}{Problems}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Title and subtitle
+% title and subtitle
 
 \NewDocumentCommand{\subtitle}{m}{\gdef\@subtitle{#1}}
 \providecommand{\@subtitle}{}
 
+% Shared title content; each layout supplies its subtitle, author, and date gaps.
+\newcommand{\preamble@titlecontent}[3]{%
+  {\LARGE\bfseries \@title \par}
+  \ifx\@subtitle\@empty\else\vskip#1 {\large\itshape \@subtitle \par}\fi
+  \vskip#2
+  {\large\begin{tabular}[t]{c}\@author\end{tabular}\par}
+  \vskip#3
+  {\normalsize \@date \par}
+}
+
 \RenewDocumentCommand{\maketitle}{}{
   \PackageInfo{preamble}{Using custom \maketitle layout (cover aware).}
+  \par\begingroup
+  \renewcommand{\thefootnote}{\@fnsymbol\c@footnote}
+  \let\footnote\thanks
   \ifcoverpage
+  % the titlepage resets page numbering. suppress its PDF page anchor so
+  % the first content page can safely use page.1; restore the user's setting.
+  \begingroup
+  \hypersetup{pageanchor=false}
+  \begin{titlepage}
     \thispagestyle{cover}
-    \begin{titlepage}
-      \vspace*{\fill}
-      \begin{center}
-        {\LARGE\bfseries \@title \par}
-        \ifx\@subtitle\@empty\else\vskip0.8em {\large\itshape \@subtitle \par}\fi
-        \vskip1.2em
-        {\large \@author \par}
-        \vskip0.8em
-        {\normalsize \@date \par}
-      \end{center}
-      \vspace*{\fill}
-      \clearpage
-    \end{titlepage}
-  \else
+    \vspace*{\fill}
     \begin{center}
-      {\LARGE\bfseries \@title \par}
-      \ifx\@subtitle\@empty\else\vskip0.5em {\large\itshape \@subtitle \par}\fi
-      \vskip1em
-      {\large \@author \par}
-      \vskip0.5em
-      {\normalsize \@date \par}
+      \preamble@titlecontent{0.8em}{1.2em}{0.8em}
     \end{center}
-    \vskip2em
+    \@thanks
+    \vspace*{\fill}
+    \clearpage
+  \end{titlepage}
+  \endgroup
+  \else
+  \begin{center}
+    \preamble@titlecontent{0.5em}{1em}{0.5em}
+  \end{center}
+  \@thanks
+  \vskip2em
   \fi
+  \endgroup
+  \setcounter{footnote}{0}
+  \global\let\@thanks\@empty
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Environment variable handling
-\ExplSyntaxOn
-\NewDocumentCommand{\getenv}{om}
-{
-  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
-  \tl_trim_spaces:N \l_tmpa_tl
-  \IfNoValueTF { #1 }
-  {
-    \tl_use:N \l_tmpa_tl
-  }
-  {
-    \tl_set_eq:NN #1 \l_tmpa_tl
-  }
-}
-\ExplSyntaxOff
-
-\getenv[\AUTHOR]{AUTHOR}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Page styles
+% page styles
 \RequirePackage{fancyhdr}
 
-\setlength{\headheight}{13.59999pt}
+% accommodate the document's normal font size, including 12pt articles.
+\setlength{\headheight}{\dimexpr\baselineskip+2pt\relax}
 
 \fancypagestyle{fancydefault}{
   \fancyhf{}
@@ -146,57 +145,16 @@
 
 \AtBeginDocument{
   \ifcoverpage
-    \thispagestyle{cover}
+  \thispagestyle{cover}
   \else
-    \thispagestyle{fancydefault}
+  \thispagestyle{fancydefault}
   \fi
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Mathematical operators and notation
+% mathematical operators and notation
 
-% ----------------------------------------------------------------
-% Basic delimiters
-\DeclarePairedDelimiter{\parens}{(}{)}
-\DeclarePairedDelimiter{\bracks}{[}{]}
-\DeclarePairedDelimiter{\braces}{\lbrace}{\rbrace}
-\DeclarePairedDelimiterX{\set}[2]{\lbrace}{\rbrace}{#1 \;\delimsize\vert\; #2}
-\DeclarePairedDelimiter{\ang}{\langle}{\rangle}
-\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
-\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
-\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
-\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-
-% ----------------------------------------------------------------
-% Real and imaginary parts (upright, modern style)
-\let\Re\relax
-\let\Im\relax
-\DeclareMathOperator{\Re}{Re}
-\DeclareMathOperator{\Im}{Im}
-
-% ----------------------------------------------------------------
-% Blackboard bold symbols
-\NewDocumentCommand{\1}{}{\mathds{1}}
-\NewDocumentCommand{\N}{}{\mathbb{N}}
-\NewDocumentCommand{\Z}{}{\mathbb{Z}}
-\NewDocumentCommand{\Q}{}{\mathbb{Q}}
-\NewDocumentCommand{\R}{}{\mathbb{R}}
-\NewDocumentCommand{\C}{}{\mathbb{C}}
-
-% ----------------------------------------------------------------
-% Miscellaneous notation
-\providecommand{\Empty}{\varnothing}
-\RenewDocumentCommand{\vv}{m}{\symbf{#1}}
-\NewDocumentCommand{\inv}{}{{}^{-1}}
-\NewDocumentCommand{\Lim}{m}{\lim\limits_{#1}}
-\newcommand{\eps}{\varepsilon}
-\newcommand{\del}{\delta}
-\newcommand{\lam}{\lambda}
-
-\NewDocumentCommand{\defeq}{}{\coloneqq}
-\NewDocumentCommand{\eqdef}{}{\eqqcolon}
-
+\RequirePackage{math-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorem environments
@@ -206,38 +164,43 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{claim}[theorem]{Claim}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{lemma*}{Lemma}
 
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{notation}[theorem]{Notation}
 \newtheorem*{notation*}{Notation}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{example*}{Example}
+
+% Preserve each reference type with the shared theorem counter, including
+% hyperref versions whose theorem patches bypass cleveref's type detection.
+% Environment groups keep these aliases local.
+\AddToHook{env/lemma/begin}{\crefalias{theorem}{lemma}}
+\AddToHook{env/corollary/begin}{\crefalias{theorem}{corollary}}
+\AddToHook{env/claim/begin}{\crefalias{theorem}{claim}}
+\AddToHook{env/definition/begin}{\crefalias{theorem}{definition}}
+\AddToHook{env/example/begin}{\crefalias{theorem}{example}}
+\AddToHook{env/notation/begin}{\crefalias{theorem}{notation}}
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
-\newtheorem*{theorem*}{Theorem}
-\newtheorem*{lemma*}{Lemma}
-\newtheorem*{definition*}{Definition}
-\newtheorem*{example*}{Example}
-
 \renewcommand*{\proofname}{Proof}
 
 % \theorembysection  →  Theorem 2.3  (resets per section, default)
-% \theorembyproblem  →  Theorem 1.2  (resets per problem)
+% \theorembyproblem  →  Theorem 1.2  (pset module; resets per problem)
 \newcommand{\theorembysection}{%
-  \counterwithout{theorem}{problem}%
+  \@ifundefined{c@problem}{}{\counterwithout{theorem}{problem}}%
   \counterwithin{theorem}{section}%
-}
-\newcommand{\theorembyproblem}{%
-  \counterwithout{theorem}{section}%
-  \counterwithin{theorem}{problem}%
 }
 \newcommand{\thmlabel}[1]{\label{thm:#1}}
 \newcommand{\lemlabel}[1]{\label{lem:#1}}
 \newcommand{\deflabel}[1]{\label{def:#1}}
 
-% Theorem style overrides for palatino
+% theorem style overrides for palatino
 \def\th@plain{%
   \thm@notefont{\scshape}
   \itshape
@@ -250,11 +213,29 @@
   \thm@notefont{\scshape}
   \normalfont
 }
-\def\popQED{\par\nobreak\hfill\qedsymbol\@endpefalse\par}
+% start the automatic QED on its own line, keeping amsthm's QED stack
+% intact so that \qedhere suppresses it and nested proofs work normally.
+\AddToHook{env/proof/end}{\par\nobreak}
 
+% a delayed proof tied to a result label; the result type defaults to Theorem.
+% \begin{proofof}[Lemma]{lem:existence} ... \end{proofof}
+% one canonical proof anchor per result: \proofref{lem:existence}, or
+% \proofref[proof below]{lem:existence} for custom link text.
+\newcommand*{\preamble@prooftitle}[2]{%
+  \proofname\ of \hyperref[#2]{#1~\ref*{#2}}%
+}
+\NewDocumentEnvironment{proofof}{O{Theorem} m}
+{
+  \begin{proof}[\preamble@prooftitle{#1}{#2}]
+    \phantomsection\label{proof:#2}\ignorespaces
+  }
+  {
+  \end{proof}
+}
+\NewDocumentCommand{\proofref}{O{proof} m}{\hyperref[proof:#2]{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Breakable algorithm environment
+% algorithm environment that splits across pages
 \newenvironment{breakablealgorithm}
 {% \begin{breakablealgorithm}
   \begin{center}
@@ -263,54 +244,38 @@
     \renewcommand{\caption}[2][\relax]{%
       {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
       \ifx\relax##1\relax
-        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+      \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
       \else
-        \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+      \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
       \fi
       \kern2pt\hrule\kern2pt
     }
-}{% \end{breakablealgorithm}
+  }{% \end{breakablealgorithm}
     \kern2pt\hrule\relax
   \end{center}
 }
 
-% Algorithm customizations
-% \definecolor{algcomment}{gray}{0.35}
-% \renewcommand{\Call}[1]{\textbf{call }#1}
-% \algrenewcommand\algorithmicrequire{\textbf{assuming:}}
-% \algrenewcommand\algorithmiccomment[1]{\hfill{\color{algcomment}$\blacktriangleright$~#1}}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% optional problem-set layout and numbering
+\theorembysection
+\ifpreamble@pset
+\RequirePackage{preamble-pset}
+\theorembyproblem
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Problem environment
-\newcounter{problem}[section]
-\renewcommand{\theproblem}{\arabic{problem}.}
-
-\NewDocumentEnvironment{problem}{o}
-{
-  \refstepcounter{problem}
-  \par\vspace{0.5\baselineskip}
-  \noindent\large\textbf{Problem~\theproblem}%
-  \IfValueT{#1}{\textbf{ (#1)}}%
-  \par\nobreak\vspace{0.25\baselineskip}\noindent\normalsize
-}
-{
-  \par\vspace{0.5\baselineskip}
-}
-
-\ifpreamble@thmbyprob\theorembyproblem\else\theorembysection\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Document metadata
-\author{\AUTHOR}
+% document metadata
+% Declare \author{...} in the document; no environment or shell lookup.
 \date{\today}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Optional math modules
+% optional math modules
 \ifpreamble@analysis\RequirePackage{math-analysis}\fi
 \ifpreamble@prob\RequirePackage{math-prob}\fi
 \ifpreamble@complexity\RequirePackage{math-complexity}\fi
+\ifpreamble@opt
+\RequirePackage{math-opt}
+\RequirePackage{preamble-envs}
+\fi
 
 \endinput
